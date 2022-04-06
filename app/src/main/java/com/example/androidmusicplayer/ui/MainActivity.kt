@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.example.androidmusicplayer.data.song.CLIENT_ID
-import com.example.androidmusicplayer.data.song.REDIRECT_URI
-import com.example.androidmusicplayer.data.song.REQUEST_CODE
 import com.example.androidmusicplayer.ui.theme.AndroidMusicPlayerTheme
+import com.example.androidmusicplayer.util.CLIENT_ID
+import com.example.androidmusicplayer.util.REDIRECT_URI
+import com.example.androidmusicplayer.util.REQUEST_CODE
 import com.example.androidmusicplayer.util.Status
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
@@ -21,10 +21,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel : MainViewModel by viewModel()
-    private val spotifyApi = SpotifyApi()
+    private val spotifyApi = SpotifyPlayer()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val spotifyApi = SpotifyApi()
+        val spotifyApi = SpotifyPlayer()
         spotifyApi.connect(applicationContext)
         val requestPermissionLauncher =
             registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->

@@ -21,6 +21,7 @@ class SongDaoTest {
     private lateinit var db: AppDatabase
     private val testSongs: List<Song> = listOf(
         Song(
+            "1",
             "Test 1",
             "Test 1",
             "1",
@@ -29,6 +30,7 @@ class SongDaoTest {
             "/test1"
         ),
         Song(
+            "2",
             "Test 2",
             "Test 2",
             "2",
@@ -37,6 +39,7 @@ class SongDaoTest {
             "/test2"
         ),
         Song(
+            "3",
             "Test 2",
             "Test 2",
             "3",

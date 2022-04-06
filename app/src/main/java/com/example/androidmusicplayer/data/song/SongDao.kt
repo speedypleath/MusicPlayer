@@ -27,9 +27,6 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE artist = :artist")
     fun getByArtist(artist: String): List<Song>
 
-    @Query("SELECT * FROM song WHERE genre = :genre")
-    fun getByGenre(genre: String): List<Song>
-
     @Transaction
     @Query("SELECT * FROM playlist")
     fun getPlaylistsWithSongs(): List<PlaylistWithSongs>

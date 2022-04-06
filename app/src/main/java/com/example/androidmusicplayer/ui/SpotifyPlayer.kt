@@ -2,8 +2,8 @@ package com.example.androidmusicplayer.ui
 
 import android.content.Context
 import android.util.Log
-import com.example.androidmusicplayer.data.song.CLIENT_ID
-import com.example.androidmusicplayer.data.song.REDIRECT_URI
+import com.example.androidmusicplayer.util.CLIENT_ID
+import com.example.androidmusicplayer.util.REDIRECT_URI
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -11,7 +11,7 @@ import com.spotify.protocol.client.CallResult
 import com.spotify.protocol.types.Empty
 import com.spotify.protocol.types.Track
 
-class SpotifyApi {
+class SpotifyPlayer {
     enum class PlayingState {
         PAUSED, PLAYING, STOPPED
     }

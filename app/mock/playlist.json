@@ -1,0 +1,36 @@
+{
+  "collaborative": false,
+  "description": "Spotify Wrapped presents the songs that you loved most this year.",
+  "external_urls": {
+    "spotify": "https://open.spotify.com/playlist/37i9dQZF1EUMDoJuT8yJsl"
+  },
+  "href": "https://api.spotify.com/v1/playlists/37i9dQZF1EUMDoJuT8yJsl",
+  "id": "37i9dQZF1EUMDoJuT8yJsl",
+  "images": [
+    {
+      "height": null,
+      "url": "https://lineup-images.scdn.co/wrapped-2021-top100_LARGE-en.jpg",
+      "width": null
+    }
+  ],
+  "name": "Your Top Songs 2021",
+  "owner": {
+    "display_name": "Spotify",
+    "external_urls": {
+      "spotify": "https://open.spotify.com/user/spotify"
+    },
+    "href": "https://api.spotify.com/v1/users/spotify",
+    "id": "spotify",
+    "type": "user",
+    "uri": "spotify:user:spotify"
+  },
+  "primary_color": null,
+  "public": false,
+  "snapshot_id": "MCwwMDAwMDAwMDNmMDE3MWIzMDVlMTI5MDlhN2RjZmI0NWJmNThkYWQ5",
+  "tracks": {
+    "href": "https://api.spotify.com/v1/playlists/37i9dQZF1EUMDoJuT8yJsl/tracks",
+    "total": 100
+  },
+  "type": "playlist",
+  "uri": "spotify:playlist:37i9dQZF1EUMDoJuT8yJsl"
+}

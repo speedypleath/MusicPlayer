@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer.data.song
+package com.example.androidmusicplayer.util
 
 import com.example.androidmusicplayer.BuildConfig
 

@@ -79,10 +79,10 @@ class MediaStoreApi(
 
                     Log.d("MediaStore", "Found song: $title")
 
-                    val song = Song(title, artist, album, null, duration, uri.encodedPath)
-                    song.addUri(uri)
-                    if(picture != null)
-                        song.addPicture(picture)
+                    val song = Song(id.toString(), title, artist, album, duration, uri.encodedPath!!, uri.encodedPath)
+//                    song.addUri(uri)
+//                    if(picture != null)
+//                        song.addPicture(picture)
                     songList.add(song)
                 }
             }

@@ -1,4 +1,4 @@
-//package com.example.androidmusicplayer
+package com.example.androidmusicplayer//package com.example.androidmusicplayer
 //
 //import androidx.test.ext.junit.runners.AndroidJUnit4
 //import org.junit.runner.RunWith
