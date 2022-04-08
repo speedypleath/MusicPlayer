@@ -1,5 +1,6 @@
 package com.example.androidmusicplayer.ui
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,59 +10,77 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.MutableLiveData
+import com.example.androidmusicplayer.data.mediastore.MediaStoreApi
 import com.example.androidmusicplayer.ui.theme.AndroidMusicPlayerTheme
 import com.example.androidmusicplayer.util.CLIENT_ID
 import com.example.androidmusicplayer.util.REDIRECT_URI
-import com.example.androidmusicplayer.util.REQUEST_CODE
+import com.example.androidmusicplayer.util.SPOTIFY_TOKEN
 import com.example.androidmusicplayer.util.Status
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-    private val mainViewModel : MainViewModel by viewModel()
-    private val spotifyApi = SpotifyPlayer()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val spotifyApi = SpotifyPlayer()
-        spotifyApi.connect(applicationContext)
-        val requestPermissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-                if (isGranted) {
+    private val mediaStoreApi: MediaStoreApi by inject()
+    private val dataStore: DataStore<Preferences> by inject()
+    var activityResult: MutableLiveData<Status> = MutableLiveData(Status.LOADING)
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+                activityResult = if (isGranted) {
                     Log.d("Main activity", "Permission granted")
-                }
-                else {
+                    MutableLiveData(Status.SUCCESS)
+                } else {
                     Log.d("Main activity", "No permission")
+                    MutableLiveData(Status.ERROR)
                 }
-            }
-        val builder = AuthorizationRequest.Builder(
+            Log.d("Main activity", "Status: ${activityResult.value.toString()}")
+        }
+
+    private val request = AuthorizationRequest.Builder(
             CLIENT_ID,
             AuthorizationResponse.Type.TOKEN,
             REDIRECT_URI
-        )
+        ).setScopes(
+            arrayOf(
+                "user-read-recently-played",
+                "user-follow-read",
+                "user-library-read",
+                "playlist-read-private"
+            )
+        ).build()
 
-        builder.setScopes(arrayOf("user-read-recently-played", "user-follow-read", "user-library-read", "playlist-read-private"))
-        val request = builder.build()
-        AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request)
-        mainViewModel.fetchSongs(requestPermissionLauncher)
-        mainViewModel.songs.observe(this) {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    Log.d("Main activity", it.data.toString())
-                }
-                Status.LOADING -> {
-                    Log.d("Main activity", "loading")
-                }
-                Status.ERROR -> {
-                    Log.d("Main activity", "error")
+    private val spotifyAuthLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            Log.d("Main activity", "Spotify login result: $activityResult")
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                val token = AuthorizationClient.getResponse(activityResult.resultCode, activityResult.data).accessToken
+                runBlocking {
+                    dataStore.edit {
+                        it[SPOTIFY_TOKEN] = token
+                    }
                 }
             }
         }
 
+    fun connectToSpotify() {
+        val spotifyIntent = AuthorizationClient.createLoginActivityIntent(this, request)
+        spotifyAuthLauncher.launch(spotifyIntent)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "Application Started!")
+        mediaStoreApi.registerLauncher(requestPermissionLauncher)
+
         setContent {
             AndroidMusicPlayerTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
@@ -70,9 +89,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-    override fun onStart() {
-        super.onStart()
-        spotifyApi.connect(this)
     }
 }

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidMusicPlayer</string>
+    <string name="title_sharedtest">Module Title</string>
 </resources>

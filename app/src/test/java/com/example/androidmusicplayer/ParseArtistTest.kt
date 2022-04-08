@@ -1,7 +1,6 @@
 package com.example.androidmusicplayer
 
-import com.example.androidmusicplayer.model.Artist
-import com.example.androidmusicplayer.web.adapters.ImageAdapter
+import com.example.androidmusicplayer.model.artist.SpotifyArtist
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -13,11 +12,10 @@ class ParseArtistTest {
     @Test
     fun parseArtist() {
         val moshi = Moshi.Builder()
-            .add(ImageAdapter())
             .addLast(KotlinJsonAdapterFactory())
             .build()
 
-        val jsonAdapter: JsonAdapter<Artist> = moshi.adapter(Artist::class.java)
+        val jsonAdapter: JsonAdapter<SpotifyArtist> = moshi.adapter(SpotifyArtist::class.java)
 
         val inputStream: InputStream = File("mock/artist.json").inputStream()
 
@@ -27,7 +25,7 @@ class ParseArtistTest {
         assert(res?.name != null)
         assert(res?.genres != null)
         assert(res?.uriString != null)
-        assert(res?.imageString != null)
+        assert(res?.images != null)
         assert(res?.artistId != null)
     }
 }

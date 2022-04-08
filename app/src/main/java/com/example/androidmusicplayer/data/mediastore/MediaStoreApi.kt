@@ -3,25 +3,30 @@ package com.example.androidmusicplayer.data.mediastore
 import android.Manifest
 import android.content.ContentUris
 import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
-import android.util.Size
 import androidx.activity.result.ActivityResultLauncher
-import com.example.androidmusicplayer.model.Song
+import com.example.androidmusicplayer.model.song.MediaStoreSong
 
 class MediaStoreApi(
     private val context: Context,
 ) {
-    fun requestPermission(launcher: ActivityResultLauncher<String>) {
+    private lateinit var launcher: ActivityResultLauncher<String>
+
+    fun registerLauncher(requestPermissionLauncher: ActivityResultLauncher<String>) {
+        launcher = requestPermissionLauncher
+    }
+
+    fun requestPermission() {
         launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
-    fun loadSongs(): MutableList<Song> {
-        val songList = mutableListOf<Song>()
+    fun loadSongs(): MutableList<MediaStoreSong> {
+        if(this::launcher.isInitialized)
+            requestPermission()
+        val songList = mutableListOf<MediaStoreSong>()
         val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
         } else {
@@ -61,28 +66,14 @@ class MediaStoreApi(
                 val artist = cursor.getString(artistColumn)
                 val album = cursor.getString(albumColumn)
                 val duration = cursor.getLong(durationColumn)
+                val uri = ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+
                 if(artist != "<unknown>") {
-                    val uri: Uri = ContentUris.withAppendedId(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        id
-                    )
-                    val picture: Bitmap? =
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            try {
-                                context.contentResolver.loadThumbnail(uri, Size(128, 128), null)
-                            } catch (e: Exception) {
-                                null
-                            }
-                        } else {
-                            null
-                        }
-
+                    val song = MediaStoreSong(id, title, artist, album, duration, uri)
                     Log.d("MediaStore", "Found song: $title")
-
-                    val song = Song(id.toString(), title, artist, album, duration, uri.encodedPath!!, uri.encodedPath)
-//                    song.addUri(uri)
-//                    if(picture != null)
-//                        song.addPicture(picture)
                     songList.add(song)
                 }
             }
