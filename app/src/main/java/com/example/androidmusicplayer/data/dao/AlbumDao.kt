@@ -15,8 +15,8 @@ interface AlbumDao {
     fun delete(album: RoomAlbum)
 
     @Query("SELECT * FROM album WHERE name = :album")
-    fun getByName(album: String): RoomAlbum
+    fun getByName(album: String): RoomAlbum?
 
     @Query("SELECT * FROM album WHERE albumId = :album")
-    fun getById(album: String): RoomAlbum
+    fun getById(album: String): RoomAlbum?
 }

@@ -3,7 +3,6 @@ package com.example.androidmusicplayer
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.test.core.app.ApplicationProvider
-import com.example.androidmusicplayer.di.Koin
 import okhttp3.Headers
 import okhttp3.Headers.Companion.headersOf
 import okhttp3.mockwebserver.MockResponse
@@ -20,6 +19,7 @@ import org.koin.test.mock.MockProviderRule
 import org.mockito.Mockito
 
 class CoilTest: KoinTest {
+    val app: MainApp = ApplicationProvider.getApplicationContext()
     @get:Rule
     val mockProvider = MockProviderRule.create { clazz ->
         Mockito.mock(clazz.java)
@@ -30,7 +30,7 @@ class CoilTest: KoinTest {
     @get:Rule
     val koinTestRule = KoinTestRule.create {
         androidContext(MainApp())
-        modules(Koin().testModule)
+        modules(testModule)
     }
 
     fun assumeTrue(actual: Boolean, message: String = "") {

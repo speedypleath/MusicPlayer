@@ -16,18 +16,18 @@ interface SongDao {
     fun deleteAll(vararg songs: RoomSong)
 
     @Query("SELECT * FROM song WHERE uri = :uri")
-    fun getByUri(uri: String): RoomSong
+    fun getByUri(uri: String): RoomSong?
 
     @Query("SELECT * FROM song WHERE title = :song")
-    fun getByName(song: String): List<RoomSong>
+    fun getByName(song: String): List<RoomSong>?
 
     @Query("SELECT * FROM song WHERE album = :album")
-    fun getByAlbum(album: String): List<RoomSong>
+    fun getByAlbum(album: String): List<RoomSong>?
 
     @Query("SELECT * FROM song WHERE artist = :artist")
-    fun getByArtist(artist: String): List<RoomSong>
+    fun getByArtist(artist: String): List<RoomSong>?
 
     @Transaction
     @Query("SELECT * FROM playlist")
-    fun getPlaylistsWithSongs(): List<PlaylistWithSongs>
+    fun getPlaylistsWithSongs(): List<PlaylistWithSongs>?
 }

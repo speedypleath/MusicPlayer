@@ -3,6 +3,7 @@
     package="com.example.androidmusicplayer">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MainApp"
         android:allowBackup="true"
@@ -11,20 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidMusicPlayer">
-        <activity android:name=".ui.LoginActivity"
-            android:launchMode="singleInstance"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="callback"
-                    android:scheme="com.example.androidmusicplayer"/>
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

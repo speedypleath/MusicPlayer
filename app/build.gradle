@@ -23,15 +23,14 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        manifestPlaceholders = [redirectHostName: 'callback', redirectSchemeName: 'com.example.androidmusicplayer']
+
     }
 
     sourceSets {
-        androidTest {
-            java.srcDirs += "src/sharedTest/java"
-        }
-        test {
-            java.srcDirs += "src/sharedTest/java"
-        }
+        androidTest.java.srcDirs += "src/sharedTest/java"
+        test.java.srcDirs += "src/sharedTest/java"
     }
 
     buildTypes {
@@ -52,6 +51,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     buildFeatures {
         compose true
     }
@@ -73,31 +73,27 @@ android {
                     '-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
             ]
         }
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
 
+        animationsDisabled = true
     }
 
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
-    implementation "androidx.activity:activity-compose:1.4.0"
-
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.20.3"
 
     // Persistent storage room
+    kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:2.5.0-alpha01"
     implementation 'androidx.room:room-runtime:2.5.0-alpha01'
-    implementation 'androidx.test:core-ktx:1.4.0'
-    kapt "androidx.room:room-compiler:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-paging:2.5.0-alpha01"
-    testImplementation "androidx.room:room-testing:$room_version"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    testImplementation "androidx.room:room-testing:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     // Koin main features for Android
     implementation "io.insert-koin:koin-android:$koin_version"
@@ -121,30 +117,69 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
 
     // Web services
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.moshi:moshi:1.13.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
     implementation 'com.serjltt.moshi:moshi-lazy-adapters:2.2'
     implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.6'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
+
+    // Coil
     implementation 'io.coil-kt:coil:2.0.0-rc02'
     implementation 'io.coil-kt:coil-compose:2.0.0-rc02'
+
+    // Datastore
     implementation "androidx.datastore:datastore:1.0.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
-    testImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
-    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
 
+    // Espresso
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espresso_version"
+
+    // Androidx
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+    implementation "androidx.activity:activity-compose:1.4.0"
+    implementation 'androidx.test:core-ktx:1.4.0'
+    implementation 'androidx.test.ext:junit-ktx:1.1.3'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.3'
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
+    // Robolectric
+    testImplementation 'org.robolectric:robolectric:4.8-alpha-1'
+    testImplementation 'org.robolectric:shadows-httpclient:4.8-alpha-1'
+
+    // Junit
     implementation 'junit:junit:4.13.2'
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'junit:junit:4.13.2'
+
+    // Mockito
     testImplementation 'org.mockito:mockito-core:4.4.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
     testImplementation 'org.mockito:mockito-inline:4.4.0'
+
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
-    androidTestImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation 'com.google.truth:truth:1.1.3'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     androidTestImplementation "org.mockito:mockito-android:4.4.0"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    debugImplementation 'androidx.fragment:fragment-testing:1.4.1'
 }

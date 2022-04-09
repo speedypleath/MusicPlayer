@@ -1,26 +1,33 @@
-package com.example.androidmusicplayer.web.adapters
+package com.example.androidmusicplayer.adapters
 
 import android.net.Uri
 import com.example.androidmusicplayer.ImageApi
+import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.model.playlist.Playlist
 import com.example.androidmusicplayer.model.playlist.RoomPlaylist
 import com.example.androidmusicplayer.model.playlist.SpotifyPlaylist
 
 class PlaylistAdapter(
     private val imageApi: ImageApi
-) {
-    fun spotifyToRoom(spotifyPlaylist: SpotifyPlaylist): RoomPlaylist {
+): Adapter {
+    fun spotifyToRoom(spotifyPlaylist: SpotifyPlaylist?): RoomPlaylist? {
+        if(spotifyPlaylist == null)
+            return null
+
         return RoomPlaylist(
             spotifyPlaylist.playlistId,
             spotifyPlaylist.name,
             spotifyPlaylist.description,
-            spotifyPlaylist.imageString,
+            spotifyPlaylist.images[0].url,
             spotifyPlaylist.uriString
         )
     }
 
-    fun spotifyToPlaylist(spotifyPlaylist: SpotifyPlaylist): Playlist {
-        val image = imageApi.getBitmapFromUrl(spotifyPlaylist.imageString)
+    fun spotifyToPlaylist(spotifyPlaylist: SpotifyPlaylist?): Playlist? {
+        if(spotifyPlaylist == null)
+            return null
+
+        val image = imageApi.getBitmapFromUrl(spotifyPlaylist.images[0].url)
         return Playlist(
             spotifyPlaylist.playlistId,
             spotifyPlaylist.name,
@@ -30,7 +37,10 @@ class PlaylistAdapter(
         )
     }
 
-    fun roomToPlaylist(roomPlaylist: RoomPlaylist): Playlist {
+    fun roomToPlaylist(roomPlaylist: RoomPlaylist?): Playlist? {
+        if(roomPlaylist == null)
+            return null
+
         val image = imageApi.getBitmapFromUrl(roomPlaylist.imageString)
         return Playlist(
             roomPlaylist.playlistId,

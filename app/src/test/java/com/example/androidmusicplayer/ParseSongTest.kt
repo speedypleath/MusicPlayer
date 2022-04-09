@@ -1,7 +1,7 @@
 package com.example.androidmusicplayer
 
 import com.example.androidmusicplayer.model.song.SpotifySong
-import com.example.androidmusicplayer.web.adapters.ArtistAdapter
+import com.example.androidmusicplayer.adapters.ArtistAdapter
 import com.serjltt.moshi.adapters.FirstElement
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi

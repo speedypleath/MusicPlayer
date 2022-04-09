@@ -2,8 +2,8 @@ package com.example.androidmusicplayer
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.androidmusicplayer.data.mediastore.MediaStoreApi
-import com.example.androidmusicplayer.data.mediastore.MediaStoreDataSource
+import com.example.androidmusicplayer.data.api.MediaStoreApi
+import com.example.androidmusicplayer.data.truth.MediaStoreDataSource
 import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.ui.MainViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

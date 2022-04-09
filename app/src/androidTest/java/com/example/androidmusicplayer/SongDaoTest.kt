@@ -43,28 +43,33 @@ class SongDaoTest: DaoTest() {
     fun insertSongs() = coroutineTest {
         songDao.insertAll(testSongs[0], testSongs[1], testSongs[2])
         val res = songDao.getByName("Test 1")
-        assert(res.contains(testSongs[0]))
+        assert(res != null)
+        assert(res!!.contains(testSongs[0]))
     }
 
     @Test
     @Throws(IOException::class)
     fun deleteSongs() = coroutineTest {
         songDao.insertAll(testSongs[0], testSongs[1], testSongs[2])
-        val songToDelete = songDao.getByName("Test 1")[0]
-        songDao.deleteAll(songToDelete)
+        val songToDelete = songDao.getByName("Test 1")?.get(0)
+        assert(songToDelete != null)
+        songDao.deleteAll(songToDelete!!)
         val res = songDao.getByName("Test 1")
-        assert(!res.contains(testSongs[0]))
+        assert(res != null)
+        assert(!res!!.contains(testSongs[0]))
     }
 
     @Test
     @Throws(IOException::class)
     fun updateSong() = coroutineTest {
         songDao.insertAll(testSongs[0], testSongs[1], testSongs[2])
-        val songToUpdate = songDao.getByName("Test 1")[0]
-        songToUpdate.title = "updated"
+        val songToUpdate = songDao.getByName("Test 1")?.get(0)
+        assert(songToUpdate != null)
+        songToUpdate!!.title = "updated"
         songDao.updateAll(songToUpdate)
         val res = songDao.getByName("updated")
-        assert(res[0].title == "updated")
+        assert(res != null)
+        assert(res?.get(0)!!.title == "updated")
     }
 
     @Test
@@ -72,7 +77,8 @@ class SongDaoTest: DaoTest() {
     fun getByUri() = coroutineTest {
         songDao.insertAll(testSongs[0], testSongs[1], testSongs[2])
         val res = songDao.getByUri("/test2")
-        assert(res.title == "Test 2")
+        assert(res != null)
+        assert(res!!.title == "Test 2")
     }
 
     @Test
@@ -80,7 +86,8 @@ class SongDaoTest: DaoTest() {
     fun getByArtist() = coroutineTest {
         songDao.insertAll(testSongs[0], testSongs[1], testSongs[2])
         val res = songDao.getByArtist("Test 2")
-        assert(res.contains(testSongs[2]))
+        assert(res != null)
+        assert(res!!.contains(testSongs[2]))
     }
 
     @Test
@@ -88,7 +95,8 @@ class SongDaoTest: DaoTest() {
     fun getByAlbum() = coroutineTest {
         songDao.insertAll(testSongs[0], testSongs[1], testSongs[2])
         val res = songDao.getByAlbum("2")
-        assert(res.contains(testSongs[1]))
+        assert(res != null)
+        assert(res!!.contains(testSongs[1]))
     }
 
     @Test

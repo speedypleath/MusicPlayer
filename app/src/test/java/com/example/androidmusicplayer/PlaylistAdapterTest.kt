@@ -26,6 +26,6 @@ class PlaylistAdapterTest {
         assert(res?.name != null)
         assert(res?.description != null)
         assert(res?.uriString != null)
-        assert(res?.imageString != null)
+        assert(res?.images != null)
     }
 }

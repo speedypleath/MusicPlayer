@@ -1,8 +1,9 @@
-package com.example.androidmusicplayer.web.adapters
+package com.example.androidmusicplayer.adapters
 
 import com.example.androidmusicplayer.ImageApi
 import com.example.androidmusicplayer.data.dao.AlbumDao
 import com.example.androidmusicplayer.data.dao.ArtistDao
+import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.model.song.MediaStoreSong
 import com.example.androidmusicplayer.model.song.RoomSong
 import com.example.androidmusicplayer.model.song.Song
@@ -14,8 +15,11 @@ class SongAdapter(
     private val albumDao: AlbumDao,
     private val albumAdapter: AlbumAdapter,
     private val artistAdapter: ArtistAdapter
-) {
-    fun roomToSong(roomSong: RoomSong): Song {
+): Adapter {
+    fun roomToSong(roomSong: RoomSong?): Song? {
+        if(roomSong == null)
+            return null
+
         val image = imageApi.getBitmapFromUrl(roomSong.uriString)
         val artist = artistAdapter.fromRoom(artistDao.getById(roomSong.artist))
         val album = albumAdapter.fromRoom(albumDao.getById(roomSong.album))
@@ -30,8 +34,12 @@ class SongAdapter(
         )
     }
 
-    fun mediaStoreToSong(mediaStoreSong: MediaStoreSong): Song {
+    fun mediaStoreToSong(mediaStoreSong: MediaStoreSong?): Song? {
+        if(mediaStoreSong == null || artistDao.getById(mediaStoreSong.artist) == null || albumDao.getById(mediaStoreSong.album) == null)
+            return null
+
         val image = imageApi.getBitmapFromUrl("content://media/external/audio/albumart/" + mediaStoreSong.songId.toString())
+
         val artist = artistAdapter.fromRoom(artistDao.getById(mediaStoreSong.artist))
         val album = albumAdapter.fromRoom(albumDao.getById(mediaStoreSong.album))
         return Song(
@@ -45,7 +53,9 @@ class SongAdapter(
         )
     }
 
-    fun fromSpotify(spotifySong: SpotifySong): Song {
+    fun fromSpotify(spotifySong: SpotifySong?): Song? {
+        if(spotifySong == null)
+            return null
         val image = imageApi.getBitmapFromUrl(spotifySong.uri)
         val artist = artistAdapter.fromSpotify(spotifySong.artist[0])
         val album = albumAdapter.fromSpotify(spotifySong.album)

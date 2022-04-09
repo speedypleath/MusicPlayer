@@ -14,7 +14,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.MutableLiveData
-import com.example.androidmusicplayer.data.mediastore.MediaStoreApi
+import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.ui.theme.AndroidMusicPlayerTheme
 import com.example.androidmusicplayer.util.CLIENT_ID
 import com.example.androidmusicplayer.util.REDIRECT_URI
@@ -78,6 +78,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "Application Started!")
         mediaStoreApi.registerLauncher(requestPermissionLauncher)
+        connectToSpotify()
 
         setContent {
             AndroidMusicPlayerTheme {

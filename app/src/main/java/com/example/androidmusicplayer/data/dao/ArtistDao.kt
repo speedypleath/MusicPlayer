@@ -15,8 +15,8 @@ interface ArtistDao {
     fun delete(artist: RoomArtist)
 
     @Query("SELECT * FROM artist WHERE name = :artist")
-    fun getByName(artist: String): RoomArtist
+    fun getByName(artist: String): RoomArtist?
 
     @Query("SELECT * FROM artist WHERE artistId = :artist")
-    fun getById(artist: String): RoomArtist
+    fun getById(artist: String): RoomArtist?
 }

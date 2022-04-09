@@ -12,7 +12,8 @@ class PlaylistDaoTest: DaoTest() {
     fun insertPlaylist() = coroutineTest {
         playlistDao.insert(testPlaylist)
         val res = playlistDao.getByName("test")
-        assert(res.name == testPlaylist.name)
+        assert(res != null)
+        assert(res?.name == testPlaylist.name)
     }
 
     @Test
@@ -20,7 +21,8 @@ class PlaylistDaoTest: DaoTest() {
     fun deletePlaylist() = coroutineTest {
         playlistDao.insert(testPlaylist)
         var res = playlistDao.getByName("test")
-        playlistDao.delete(res)
+        assert(res != null)
+        playlistDao.delete(res!!)
         res = playlistDao.getByName("test")
         assert(res != testPlaylist)
     }
@@ -30,8 +32,9 @@ class PlaylistDaoTest: DaoTest() {
     fun updatePlaylist() = coroutineTest {
         playlistDao.insert(testPlaylist)
         val res = playlistDao.getByName("test")
-        res.name = "updated"
-        playlistDao.update(res)
+        assert(res != null)
+        res?.name = "updated"
+        playlistDao.update(res!!)
         assert(res != testPlaylist)
         assert(res.name == "updated")
     }

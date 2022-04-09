@@ -15,5 +15,5 @@ interface PlaylistDao {
     fun delete(playlist: RoomPlaylist)
 
     @Query("SELECT * FROM playlist WHERE name = :playlist")
-    fun getByName(playlist: String): RoomPlaylist
+    fun getByName(playlist: String): RoomPlaylist?
 }

@@ -19,7 +19,7 @@ import com.example.androidmusicplayer.util.Converters
 @TypeConverters(Converters::class)
 @Database(entities = [RoomSong::class, RoomPlaylist::class, PlaylistSongCrossRef::class,
                      RoomArtist::class, RoomAlbum::class, GenreSongCrossRef::class,
-                     Genre::class], version = 1)
+                     Genre::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun playlistDao(): PlaylistDao

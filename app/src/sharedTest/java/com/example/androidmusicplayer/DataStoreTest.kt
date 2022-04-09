@@ -15,13 +15,14 @@ import kotlinx.coroutines.cancel
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
+import org.koin.test.AutoCloseKoinTest
 import java.io.File
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 abstract class DataStoreTest(
     coroutineTestImpl: CoroutineTest = CoroutineTestImpl()
-): CoroutineTest by coroutineTestImpl {
+): CoroutineTest by coroutineTestImpl, AutoCloseKoinTest() {
     private lateinit var preferencesScope: CoroutineScope
     protected lateinit var dataStore: DataStore<Preferences>
 

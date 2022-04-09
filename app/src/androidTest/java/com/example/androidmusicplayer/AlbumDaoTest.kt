@@ -15,7 +15,7 @@ class AlbumDaoTest: DaoTest() {
     fun insertAlbum() = coroutineTest {
         albumDao.insert(album)
         val res = albumDao.getByName("test")
-        assert(res.name == album.name)
+        assert(res?.name == album.name)
     }
 
     @Test
@@ -23,7 +23,8 @@ class AlbumDaoTest: DaoTest() {
     fun deleteAlbum() = coroutineTest {
         albumDao.insert(album)
         var res = albumDao.getByName("test")
-        albumDao.delete(res)
+        assert(res != null)
+        albumDao.delete(res!!)
         res = albumDao.getByName("test")
         assert(res != album)
     }
@@ -33,7 +34,8 @@ class AlbumDaoTest: DaoTest() {
     fun updateAlbum() = coroutineTest {
         albumDao.insert(album)
         val res = albumDao.getByName("test")
-        res.name = "updated"
+        assert(res != null)
+        res!!.name = "updated"
         albumDao.update(res)
         assert(res != album)
         assert(res.name == "updated")

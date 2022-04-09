@@ -1,6 +1,6 @@
 package com.example.androidmusicplayer
 
-import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import coil.ImageLoader
@@ -16,17 +16,19 @@ import okio.sink
 import okio.source
 import java.io.File
 
-class ImageApi: Application(), ImageLoaderFactory {
+class ImageApi(
+    private val context: Context
+): ImageLoaderFactory {
     override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(this)
+        return ImageLoader.Builder(context)
                 .memoryCache {
-                MemoryCache.Builder(this)
+                MemoryCache.Builder(context)
                     .maxSizePercent(0.25)
                     .build()
                 }
                 .diskCache {
                     DiskCache.Builder()
-                        .directory(this.cacheDir.resolve("image_cache"))
+                        .directory(context.cacheDir.resolve("image_cache"))
                         .maxSizePercent(0.02)
                         .build()
                 }
@@ -45,7 +47,7 @@ class ImageApi: Application(), ImageLoaderFactory {
     }
 
     fun setAuthorization(token: String) {
-        imageLoader.newBuilder().okHttpClient {
+        context.imageLoader.newBuilder().okHttpClient {
             OkHttpClient.Builder()
                 .addInterceptor(AuthorizationInterceptor(token))
                 .build()
@@ -60,7 +62,7 @@ class ImageApi: Application(), ImageLoaderFactory {
         var failures = 0
         while (true) {
             try {
-                return BitmapFactory.decodeStream(assets.open(fileName), null, options)!!
+                return BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"), null, options)!!
             } catch (e: Exception) {
                 if (failures++ > 5) throw e
             }
@@ -68,8 +70,8 @@ class ImageApi: Application(), ImageLoaderFactory {
     }
 
     fun copyAssetToFile(fileName: String): File {
-        val source = assets.open(fileName).source()
-        val file = File(filesDir.absolutePath + File.separator + fileName)
+        val source = context.assets.open(fileName).source()
+        val file = File(context.filesDir.absolutePath + File.separator + fileName)
         val sink = file.sink().buffer()
         source.use { sink.use { sink.writeAll(source) } }
         return file

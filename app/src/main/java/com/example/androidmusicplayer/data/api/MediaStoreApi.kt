@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer.data.mediastore
+package com.example.androidmusicplayer.data.api
 
 import android.Manifest
 import android.content.ContentUris
@@ -12,18 +12,18 @@ import com.example.androidmusicplayer.model.song.MediaStoreSong
 
 class MediaStoreApi(
     private val context: Context,
-) {
+): DataApi {
     private lateinit var launcher: ActivityResultLauncher<String>
 
-    fun registerLauncher(requestPermissionLauncher: ActivityResultLauncher<String>) {
+    override fun registerLauncher(requestPermissionLauncher: ActivityResultLauncher<String>) {
         launcher = requestPermissionLauncher
     }
 
-    fun requestPermission() {
+    override suspend fun requestPermission() {
         launcher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
-    fun loadSongs(): MutableList<MediaStoreSong> {
+    suspend fun loadSongs(): MutableList<MediaStoreSong> {
         if(this::launcher.isInitialized)
             requestPermission()
         val songList = mutableListOf<MediaStoreSong>()

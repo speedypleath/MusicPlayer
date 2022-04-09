@@ -12,7 +12,8 @@ class ArtistDaoTest: DaoTest() {
     fun insertArtist() = coroutineTest {
         artistDao.insert(artist)
         val res = artistDao.getByName("test")
-        assert(res.name == artist.name)
+        assert(res != null)
+        assert(res?.name == artist.name)
     }
 
     @Test
@@ -20,7 +21,8 @@ class ArtistDaoTest: DaoTest() {
     fun deleteArtist() = coroutineTest {
         artistDao.insert(artist)
         var res = artistDao.getByName("test")
-        artistDao.delete(res)
+        assert(res != null)
+        artistDao.delete(res!!)
         res = artistDao.getByName("test")
         assert(res != artist)
     }
@@ -30,8 +32,9 @@ class ArtistDaoTest: DaoTest() {
     fun updateArtist() = coroutineTest {
         artistDao.insert(artist)
         val res = artistDao.getByName("test")
-        res.name = "updated"
-        artistDao.update(res)
+        assert(res != null)
+        res?.name = "updated"
+        artistDao.update(res!!)
         assert(res != artist)
         assert(res.name == "updated")
     }

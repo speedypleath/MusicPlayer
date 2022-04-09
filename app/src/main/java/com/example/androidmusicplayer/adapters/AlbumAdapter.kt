@@ -1,13 +1,14 @@
-package com.example.androidmusicplayer.web.adapters
+package com.example.androidmusicplayer.adapters
 
 import com.example.androidmusicplayer.model.album.RoomAlbum
 import com.example.androidmusicplayer.model.album.SpotifyAlbum
+import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.web.annotations.Album
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import com.example.androidmusicplayer.model.album.Album as AlbumModel
 
-class AlbumAdapter {
+class AlbumAdapter: Adapter {
     @ToJson
     fun toJson(@Album album: String?) = album
 
@@ -17,13 +18,13 @@ class AlbumAdapter {
         return json.name
     }
 
-    fun fromRoom(roomAlbum: RoomAlbum): AlbumModel {
-        return AlbumModel(
+    fun fromRoom(roomAlbum: RoomAlbum?): AlbumModel? {
+        return if(roomAlbum != null)
+            AlbumModel(
             roomAlbum.albumId,
             roomAlbum.name,
             roomAlbum.imageString,
-            roomAlbum.uriString
-        )
+            roomAlbum.uriString) else null
     }
 
     fun fromSpotify(spotifyAlbum: SpotifyAlbum): AlbumModel {
