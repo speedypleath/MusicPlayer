@@ -1,3 +1,5 @@
 package com.example.androidmusicplayer.model.interfaces
 
-interface Model<T>
+import org.koin.core.component.KoinComponent
+
+interface Model<T>: KoinComponent

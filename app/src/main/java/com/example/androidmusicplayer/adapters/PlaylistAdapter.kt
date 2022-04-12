@@ -27,7 +27,7 @@ class PlaylistAdapter(
         if(spotifyPlaylist == null)
             return null
 
-        val image = imageApi.getBitmapFromUrl(spotifyPlaylist.images[0].url)
+        val image = spotifyPlaylist.images[0].url?.let { imageApi.getBitmapFromUrl(it) }
         return Playlist(
             spotifyPlaylist.playlistId,
             spotifyPlaylist.name,
@@ -41,7 +41,7 @@ class PlaylistAdapter(
         if(roomPlaylist == null)
             return null
 
-        val image = imageApi.getBitmapFromUrl(roomPlaylist.imageString)
+        val image = roomPlaylist.imageString?.let { imageApi.getBitmapFromUrl(it) }
         return Playlist(
             roomPlaylist.playlistId,
             roomPlaylist.name,

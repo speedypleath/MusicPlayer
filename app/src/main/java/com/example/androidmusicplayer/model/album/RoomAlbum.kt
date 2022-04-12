@@ -5,9 +5,10 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.androidmusicplayer.adapters.AlbumAdapter
-import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.model.interfaces.Model
 import com.example.androidmusicplayer.model.interfaces.RoomModel
+import org.koin.core.component.inject
+
 
 @Entity(tableName = RoomAlbum.TABLE_NAME)
 data class RoomAlbum(
@@ -21,17 +22,10 @@ data class RoomAlbum(
     }
     @Ignore
     val type = "room"
-    @Transient
-    private lateinit var adapter: AlbumAdapter
+    @delegate:Ignore
+    private val adapter: AlbumAdapter by inject()
 
-    fun bind(adapter: Adapter) {
-        this.adapter = adapter as AlbumAdapter
-    }
-
-    override fun toRoom(model: Model<Album>): RoomModel<Album>? {
-        TODO()
-    }
-    override fun fromRoom(model: RoomModel<Album>): Album? {
-        return adapter.fromRoom(model as RoomAlbum)
+    override fun fromRoom(): Model<Album>? {
+        return adapter.fromRoom(this)
     }
 }

@@ -1,49 +1,47 @@
 package com.example.androidmusicplayer.data.api
 
+import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import com.example.androidmusicplayer.model.song.Song
-import com.example.androidmusicplayer.util.SPOTIFY_TOKEN
+import com.example.androidmusicplayer.adapters.ResponseAdapter
 import com.example.androidmusicplayer.web.AuthorizationInterceptor
 import com.example.androidmusicplayer.web.SpotifyApiEndpoint
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.concurrent.TimeUnit
 
-class SpotifyApi (
-    private val dataStore: DataStore<Preferences>
-): DataApi {
+class SpotifyApi {
     lateinit var endpoint: SpotifyApiEndpoint
+    var initialized = false
 
-    private lateinit var launcher: ActivityResultLauncher<String>
+    private lateinit var launcher: ActivityResultLauncher<Intent>
+    private lateinit var intent: Intent
 
-    override fun registerLauncher(requestPermissionLauncher: ActivityResultLauncher<String>) {
-        launcher = requestPermissionLauncher
+    fun registerLauncher(launcher: ActivityResultLauncher<Intent>, intent: Intent) {
+        this.launcher = launcher
+        this.intent = intent
     }
 
-    override suspend fun requestPermission() {
-        val token: String? = dataStore.data.map { preferences ->
-            preferences[SPOTIFY_TOKEN]
-        }.first()
+    fun requestPermission() {
+        launcher.launch(intent)
+    }
+
+    fun loadEndpoints(token: String) {
+        val moshi = Moshi.Builder()
+            .add(ResponseAdapter())
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
 
         val client = OkHttpClient.Builder()
             .addInterceptor(AuthorizationInterceptor(token))
-            .connectTimeout(1, TimeUnit.SECONDS)
-            .readTimeout(1, TimeUnit.SECONDS)
-            .writeTimeout(1, TimeUnit.SECONDS)
             .build()
 
         endpoint = Retrofit.Builder()
             .baseUrl("https://api.spotify.com")
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
-            .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(SpotifyApiEndpoint::class.java)
     }
-
-    suspend fun loadSongs(): MutableList<Song> = TODO()
 }

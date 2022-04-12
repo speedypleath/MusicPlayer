@@ -11,9 +11,10 @@ import kotlinx.coroutines.sync.withLock
 
 class SongRepository(
     private val mediaStoreDataSource: MediaStoreDataSource,
-    private val spotifyDataSource: SpotifyDataSource,
+    private val spotifyDataSource: SpotifyDataSource
 ) {
     private lateinit var db: AppDatabase
+
     fun createDb(context: Context) {
         db = Room.inMemoryDatabaseBuilder(
             context.applicationContext, AppDatabase::class.java)
@@ -22,13 +23,13 @@ class SongRepository(
     }
 
     private val mutex = Mutex()
-    private var songs: MutableList<Song?> = emptyList<Song?>().toMutableList()
+    private var songs: List<Song> = emptyList<Song>().toMutableList()
 
-    suspend fun fetchSongs(refresh: Boolean = false): MutableList<Song?> {
+    suspend fun fetchSongs(refresh: Boolean = false): List<Song> {
         if (refresh || songs.isEmpty()) {
             val songResult = mediaStoreDataSource.fetchSongs() + spotifyDataSource.fetchSongs()
             mutex.withLock {
-                this.songs = songResult as MutableList<Song?>
+                this.songs = songResult
             }
         }
 

@@ -10,10 +10,9 @@ class SpotifyDataSource(
     val spotifyApi: SpotifyApi,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
-
     suspend fun fetchSongs(): List<Song> =
         withContext(ioDispatcher) {
-            spotifyApi.endpoint.getTracks().await().map { spotifySong -> spotifySong.fromSpotify(spotifySong) as Song }
+            spotifyApi.endpoint.getTracks().await().items.mapNotNull { spotifySong -> spotifySong.fromSpotify() }
         }
 
     suspend fun getSong(songId: String) =

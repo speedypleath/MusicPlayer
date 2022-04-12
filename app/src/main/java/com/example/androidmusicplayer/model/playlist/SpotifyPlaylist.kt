@@ -2,11 +2,11 @@ package com.example.androidmusicplayer.model.playlist
 
 import com.example.androidmusicplayer.adapters.PlaylistAdapter
 import com.example.androidmusicplayer.model.SpotifyImage
-import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.model.interfaces.Model
 import com.example.androidmusicplayer.model.interfaces.SpotifyModel
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.koin.core.component.inject
 
 
 @JsonClass(generateAdapter = true)
@@ -18,12 +18,10 @@ data class SpotifyPlaylist(
     @Json(name = "uri") var uriString: String,
 ): SpotifyModel<Playlist>, Model<Playlist> {
     val type = "spotify"
-    lateinit var adapter: PlaylistAdapter
-    fun bind(adapter: Adapter) {
-        this.adapter = adapter as PlaylistAdapter
-    }
+    @delegate:Transient
+    private val adapter: PlaylistAdapter by inject()
 
-    override fun fromSpotify(model: SpotifyModel<Playlist>): Playlist {
+    override fun fromSpotify(): Playlist {
         TODO()
     }
 }

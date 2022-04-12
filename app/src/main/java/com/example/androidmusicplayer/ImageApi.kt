@@ -3,12 +3,15 @@ package com.example.androidmusicplayer
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.imageLoader
 import coil.memory.MemoryCache
+import coil.request.ImageRequest
 import com.example.androidmusicplayer.web.AuthorizationInterceptor
+import kotlinx.coroutines.runBlocking
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okio.buffer
@@ -62,9 +65,14 @@ class ImageApi(
         var failures = 0
         while (true) {
             try {
-                return BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"), null, options)!!
+                var bitmap: Bitmap
+                val req = ImageRequest.Builder(context)
+                    .data(fileName) // demo link
+                    .build()
+                runBlocking { bitmap = context.imageLoader.execute(req).drawable?.toBitmap(256, 256)!! }
+                return bitmap
             } catch (e: Exception) {
-                if (failures++ > 5) throw e
+                if (failures++ > 5) return BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"), null, options)!!
             }
         }
     }
