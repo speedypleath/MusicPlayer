@@ -2,6 +2,36 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'info.solidsoft.pitest'
+    id 'pl.droidsonroids.pitest'
+    id 'de.mobilej.unmock'
+    id 'jacoco'
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([debugTree]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ]))
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.8"
+            }
+        }
+    }
 }
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
@@ -17,8 +47,8 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
-        buildConfigField("String", "SPOTIFY_CLIENT_ID", apikeyProperties["SPOTIFY_CLIENT_ID"])
-        buildConfigField("String", "SPOTIFY_REDIRECT_URI", apikeyProperties["SPOTIFY_REDIRECT_URI"])
+        buildConfigField("String", 'SPOTIFY_CLIENT_ID', apikeyProperties["SPOTIFY_CLIENT_ID"])
+        buildConfigField("String", 'SPOTIFY_REDIRECT_URI', apikeyProperties["SPOTIFY_REDIRECT_URI"])
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -27,22 +57,37 @@ android {
         manifestPlaceholders = [redirectHostName: 'callback', redirectSchemeName: 'com.example.androidmusicplayer']
 
     }
+    testOptions {
+        kotlinOptions {
+            freeCompilerArgs += [
+                    '-opt-in=kotlin.RequiresOptIn',
+                    '-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
+            ]
+        }
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']       //This line
+            }
+        }
+        unitTests.includeAndroidResources = true
+        unitTests.returnDefaultValues = true
+    }
 
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
     sourceSets {
         androidTest.java.srcDirs += "src/sharedTest/java"
         test.java.srcDirs += "src/sharedTest/java"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
-        debug {
-            minifyEnabled false
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -63,31 +108,54 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            exclude 'log4j2.xml'
+            exclude 'META-INF/DEPENDENCIES'
         }
     }
 
-    testOptions {
-        kotlinOptions {
-            freeCompilerArgs += [
-                    '-opt-in=kotlin.RequiresOptIn',
-                    '-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
-            ]
-        }
-        unitTests {
-            includeAndroidResources = true
-            returnDefaultValues = true
-        }
-
-        animationsDisabled = true
+    pitest {
+        targetClasses.set(['com.example.*'])
+        excludeMockableAndroidJar.set(true)
     }
 
+    unMock {
+        keep "android.net.Uri"
+        keep "android.app.Application"
+        keep "android.app.Activity"
+        keepStartingWith "android.view"
+        keepStartingWith "android.content"
+        keepStartingWith "android.os"
+        keepStartingWith "android.database"
+        keepStartingWith "androidx.activity"
+    }
 }
 
 dependencies {
+//    implementation('xyz.gianlu.librespot:librespot-player:1.6.2:thin') {
+//        exclude group: 'xyz.gianlu.librespot', module: 'librespot-sink'
+//        exclude group: 'com.lmax', module: 'disruptor'
+//        exclude group: 'org.apache.logging.log4j'
+//    }
+
+//    implementation project(':librespot-android-decoder')
+//    implementation project(':librespot-android-decoder-tremolo')
+//    implementation project(':librespot-android-sink')
+    implementation 'uk.uuid.slf4j:slf4j-android:1.7.36-0'
+    implementation "androidx.activity:activity:1.4.0"
+    implementation 'org.jacoco:org.jacoco.core:0.8.8'
+
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.20.3"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+    implementation "androidx.navigation:navigation-compose:2.4.2"
+
+    // Media3
+    implementation "androidx.media3:media3-exoplayer:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
+    implementation "androidx.media3:media3-ui:$media3_version"
+    implementation "androidx.media3:media3-session:$media3_version"
+    implementation "androidx.media3:media3-common:$media3_version"
 
     // Persistent storage room
     kapt "androidx.room:room-compiler:$room_version"
@@ -132,22 +200,21 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
 
     // Coil
-    implementation 'io.coil-kt:coil:2.0.0-rc02'
-    implementation 'io.coil-kt:coil-compose:2.0.0-rc02'
-    implementation 'com.github.bumptech.glide:glide:4.13.0'
-    implementation "com.github.skydoves:landscapist-glide:1.5.1"
+    implementation 'io.coil-kt:coil:2.0.0-rc03'
+    implementation 'io.coil-kt:coil-compose:2.0.0-rc03'
+    implementation "com.github.skydoves:landscapist-coil:1.5.1"
 
     // Datastore
     implementation "androidx.datastore:datastore:1.0.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Espresso
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
-    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espresso_version"
+//    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+//    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+//    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+//    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$espresso_version"
+//    androidTestImplementation "androidx.test.espresso:espresso-web:$espresso_version"
+//    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espresso_version"
 
     // Androidx
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -168,6 +235,7 @@ dependencies {
     // Robolectric
     testImplementation 'org.robolectric:robolectric:4.8-alpha-1'
     testImplementation 'org.robolectric:shadows-httpclient:4.8-alpha-1'
+    unmock 'org.robolectric:android-all:12.1-robolectric-8229987'
 
     // Junit
     implementation 'junit:junit:4.13.2'
@@ -183,7 +251,7 @@ dependencies {
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.6'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1'
     androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
-    androidTestImplementation 'com.google.truth:truth:1.1.3'
+//    androidTestImplementation 'com.google.truth:truth:1.1.3'
     androidTestImplementation "org.mockito:mockito-android:4.4.0"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation 'androidx.fragment:fragment-testing:1.4.1'

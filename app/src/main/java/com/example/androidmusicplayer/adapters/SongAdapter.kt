@@ -1,5 +1,10 @@
 package com.example.androidmusicplayer.adapters
 
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
+import android.util.Size
+import com.example.androidmusicplayer.AndroidMusicPlayer
 import com.example.androidmusicplayer.data.dao.AlbumDao
 import com.example.androidmusicplayer.data.dao.ArtistDao
 import com.example.androidmusicplayer.data.dao.SongDao
@@ -19,6 +24,7 @@ class SongAdapter(
     private val albumDao: AlbumDao,
     private val songDao: SongDao
 ): Adapter {
+    private val context = AndroidMusicPlayer.instance.applicationContext
     @ToJson
     fun toJson(spotifySongs: List<SpotifySong>) = spotifySongs
 
@@ -40,6 +46,7 @@ class SongAdapter(
             album,
             roomSong.length,
             roomSong.uriString,
+            null,
             roomSong.uriString
         )
     }
@@ -47,13 +54,23 @@ class SongAdapter(
     fun fromMediaStore(mediaStoreSong: MediaStoreSong): Song {
         val artist = mediaStoreSong.artist.fromMediaStore() as Artist
         val album = mediaStoreSong.album.fromMediaStore()
+        val image = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                context.contentResolver.loadThumbnail(Uri.parse("content://media/external/audio/" + mediaStoreSong.songId.toString()), Size(128, 128), null)
+            } catch (e: Exception) {
+                BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"))
+            }
+        } else {
+            BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"))
+        }
         return Song(
             mediaStoreSong.songId.toString(),
             mediaStoreSong.name,
             artist,
             album,
             mediaStoreSong.duration,
-            "content://media/external/audio/albumart/" + mediaStoreSong.songId.toString(),
+            "content://media/external/audio/" + mediaStoreSong.songId.toString(),
+            image,
             mediaStoreSong.uri.encodedPath!!
         )
     }
@@ -63,15 +80,18 @@ class SongAdapter(
             return null
         val artist = spotifySong.artist[0].fromSpotify()
         val album = spotifySong.album.fromSpotify()
-        return Song(
-            spotifySong.songId,
-            spotifySong.title,
-            artist,
-            album,
-            spotifySong.length,
-            spotifySong.uri,
-            spotifySong.uri
-        )
+        return spotifySong.album.images[0].url?.let {
+            Song(
+                spotifySong.songId,
+                spotifySong.title,
+                artist,
+                album,
+                spotifySong.length,
+                it,
+                null,
+                spotifySong.uri
+            )
+        }
     }
 
     fun spotifyToRoom(spotifySong: SpotifySong) {

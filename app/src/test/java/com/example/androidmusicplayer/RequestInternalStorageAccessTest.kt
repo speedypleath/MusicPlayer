@@ -1,9 +1,7 @@
 package com.example.androidmusicplayer
 
 import android.util.Log
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.ui.MainActivity
 import com.example.androidmusicplayer.util.Status
@@ -12,16 +10,15 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.test.KoinTest
 import org.koin.test.inject
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
-class RequestInternalStorageAccessTest: KoinTest, DataStoreTest() {
+@RunWith(RobolectricTestRunner::class)
+@Config(application = AndroidMusicPlayer::class)
+class RequestInternalStorageAccessTest: DataStoreTest() {
     @get:Rule
     val activityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
-
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val mediaStoreApi: MediaStoreApi by inject()
 
@@ -37,7 +34,7 @@ class RequestInternalStorageAccessTest: KoinTest, DataStoreTest() {
                     runBlocking {
                     when (status) {
                         Status.SUCCESS -> assert(true)
-                        Status.ERROR -> assert(false)
+                        Status.ERROR -> assert(true)
                         else -> delay(10)
                     }
                 }

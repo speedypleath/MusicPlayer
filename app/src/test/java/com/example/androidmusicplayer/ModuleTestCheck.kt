@@ -1,8 +1,9 @@
 package com.example.androidmusicplayer
+
 import org.junit.Test
 import org.junit.experimental.categories.Category
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 import org.koin.test.KoinTest
 import org.koin.test.category.CheckModuleTest
@@ -14,8 +15,8 @@ class ModuleTestCheck: KoinTest {
     fun checkTestModules() {
         startKoin {
             printLogger(Level.DEBUG)
-            androidContext(MainApp())
-            modules(testModule)
+            androidContext(AndroidMusicPlayer())
+            modules(AndroidMusicPlayer().testModule)
         }.checkModules()
     }
 }

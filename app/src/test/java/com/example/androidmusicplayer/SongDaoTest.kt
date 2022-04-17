@@ -1,12 +1,14 @@
 package com.example.androidmusicplayer
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.androidmusicplayer.model.song.RoomSong
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.IOException
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(application = AndroidMusicPlayer::class)
 class SongDaoTest: DaoTest() {
     private val testSongs: List<RoomSong> = listOf(
         RoomSong(

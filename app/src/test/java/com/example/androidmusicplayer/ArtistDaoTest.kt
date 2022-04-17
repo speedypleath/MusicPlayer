@@ -2,8 +2,13 @@ package com.example.androidmusicplayer
 
 import com.example.androidmusicplayer.model.artist.RoomArtist
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.IOException
 
+@RunWith(RobolectricTestRunner::class)
+@Config(application = AndroidMusicPlayer::class)
 class ArtistDaoTest: DaoTest() {
     private val artist = RoomArtist("1","test", "/test", "/test")
 
@@ -11,7 +16,7 @@ class ArtistDaoTest: DaoTest() {
     @Throws(IOException::class)
     fun insertArtist() = coroutineTest {
         artistDao.insert(artist)
-        val res = artistDao.getByName("test")
+        val res = artistDao.getById("1")
         assert(res != null)
         assert(res?.name == artist.name)
     }

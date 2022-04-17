@@ -1,0 +1,16 @@
+{
+  "apkPath": "./apk/app-debug.apk",
+  "appName": "com.example.androidmusicplayer",
+  "mutantsFolder": "./mutants",
+  "operatorsDir": "./",
+  "multithreadExec": "true",
+  "extraPath": "./extra",
+  "ignoreDeadCode": "true",
+  "selectionStrategy": "all",
+  "selectionParameters":{
+    "amountMutants":"34",
+    "perOperator":"false",
+    "confidenceLevel":"85",
+    "marginError":"10"
+  }
+}

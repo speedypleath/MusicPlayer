@@ -1,5 +1,6 @@
 package com.example.androidmusicplayer.model.song
 
+import android.graphics.Bitmap
 import com.example.androidmusicplayer.adapters.SongAdapter
 import com.example.androidmusicplayer.model.album.Album
 import com.example.androidmusicplayer.model.artist.Artist
@@ -12,9 +13,9 @@ data class Song(
     var artist: Artist?,
     var album: Album?,
     var length: Long,
-    var imageUri: String,
-    var uri: String,
-    var genres: List<String> = listOf(),
+    var imageUri: String?,
+    var image: Bitmap?,
+    var uri: String?,
 ): Model<Song> {
     private val adapter: SongAdapter by inject()
 }

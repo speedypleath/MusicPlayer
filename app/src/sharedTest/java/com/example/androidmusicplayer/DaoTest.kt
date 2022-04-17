@@ -12,11 +12,12 @@ import com.example.androidmusicplayer.data.dao.SongDao
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import org.koin.test.AutoCloseKoinTest
 import java.io.IOException
 
 abstract class DaoTest(
     coroutineTestImpl: CoroutineTest = CoroutineTestImpl()
-): CoroutineTest by coroutineTestImpl {
+): CoroutineTest by coroutineTestImpl, AutoCloseKoinTest() {
     private lateinit var db: AppDatabase
     protected lateinit var artistDao: ArtistDao
     protected lateinit var albumDao: AlbumDao

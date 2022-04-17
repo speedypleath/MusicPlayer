@@ -15,17 +15,33 @@ import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
     private val repository: SongRepository by inject()
-    private val spotifyApi: SpotifyApi by inject { parametersOf(this) }
-    private val mediaStoreApi: MediaStoreApi by inject { parametersOf(this) }
+    val spotifyApi: SpotifyApi by inject { parametersOf(this) }
+    val mediaStoreApi: MediaStoreApi by inject { parametersOf(this) }
     private val mainViewModel: MainViewModel by viewModel()
     var activityResult: MutableLiveData<Status> = MutableLiveData(Status.LOADING)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "Application Started!")
-        if(!spotifyApi.initialized)
+        if(!spotifyApi.isInitialized)
             spotifyApi.requestPermission()
-        if(!mediaStoreApi.initialized)
+        if(activityResult.value != Status.SUCCESS)
             mediaStoreApi.requestPermission()
+//        val thread = Thread {
+//            try {
+//                val conf = Session.Configuration.Builder()
+//                    .build()
+//                val session = Session.Builder(conf)
+//                    .setPreferredLocale(Locale.getDefault().language)
+//                    .setDeviceType(Connect.DeviceType.SMARTPHONE)
+//                    .setDeviceId(null).setDeviceName("yay")
+//                    .facebook()
+//                    .create()
+//
+//                LibrespotHolder.set(session)
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+//        thread.start()
     }
 }

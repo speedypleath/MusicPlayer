@@ -10,14 +10,9 @@ import coil.disk.DiskCache
 import coil.imageLoader
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
-import com.example.androidmusicplayer.web.AuthorizationInterceptor
 import kotlinx.coroutines.runBlocking
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
-import okio.buffer
-import okio.sink
-import okio.source
-import java.io.File
 
 class ImageApi(
     private val context: Context
@@ -49,19 +44,10 @@ class ImageApi(
                 .build()
     }
 
-    fun setAuthorization(token: String) {
-        context.imageLoader.newBuilder().okHttpClient {
-            OkHttpClient.Builder()
-                .addInterceptor(AuthorizationInterceptor(token))
-                .build()
-        }.build()
-    }
-
     fun getBitmapFromUrl(
         fileName: String,
         options: BitmapFactory.Options = BitmapFactory.Options().apply { inPreferredConfig = Bitmap.Config.ARGB_8888 }
     ): Bitmap {
-        // Retry multiple times as the emulator can be flaky.
         var failures = 0
         while (true) {
             try {
@@ -75,13 +61,5 @@ class ImageApi(
                 if (failures++ > 5) return BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"), null, options)!!
             }
         }
-    }
-
-    fun copyAssetToFile(fileName: String): File {
-        val source = context.assets.open(fileName).source()
-        val file = File(context.filesDir.absolutePath + File.separator + fileName)
-        val sink = file.sink().buffer()
-        source.use { sink.use { sink.writeAll(source) } }
-        return file
     }
 }

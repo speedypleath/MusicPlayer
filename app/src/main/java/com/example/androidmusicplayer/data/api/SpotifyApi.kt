@@ -13,7 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class SpotifyApi {
     lateinit var endpoint: SpotifyApiEndpoint
-    var initialized = false
+    val isInitialized get() = ::endpoint.isInitialized
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
     private lateinit var intent: Intent
@@ -28,6 +28,9 @@ class SpotifyApi {
     }
 
     fun loadEndpoints(token: String) {
+        if(isInitialized)
+            return
+
         val moshi = Moshi.Builder()
             .add(ResponseAdapter())
             .addLast(KotlinJsonAdapterFactory())

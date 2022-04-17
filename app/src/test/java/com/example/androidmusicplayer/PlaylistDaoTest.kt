@@ -2,8 +2,13 @@ package com.example.androidmusicplayer
 
 import com.example.androidmusicplayer.model.playlist.RoomPlaylist
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.IOException
 
+@RunWith(RobolectricTestRunner::class)
+@Config(application = AndroidMusicPlayer::class)
 class PlaylistDaoTest: DaoTest() {
     private val testPlaylist = RoomPlaylist("1","test", "test", "/test", "/test")
 
