@@ -49,6 +49,7 @@ class AndroidMusicPlayer : Application() {
         single { provideAlbumAdapter(androidContext(), get()) }
         single { provideSpotifyApi(get()) }
         single { provideMediaStoreApi(get()) }
+        single { provideTestDatabase(androidContext()) }
         single {
             PreferenceDataStoreFactory.create {
                 androidContext().preferencesDataStoreFile("preferences")

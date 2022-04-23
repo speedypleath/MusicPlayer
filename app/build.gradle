@@ -5,33 +5,6 @@ plugins {
     id 'info.solidsoft.pitest'
     id 'pl.droidsonroids.pitest'
     id 'de.mobilej.unmock'
-    id 'jacoco'
-}
-
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.setFrom(files([mainSrc]))
-    classDirectories.setFrom(files([debugTree]))
-    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/code-coverage/connected/*coverage.ec"
-    ]))
-}
-
-jacoco {
-    toolVersion = "0.8.8"
-}
-configurations.all{
-    resolutionStrategy {
-        eachDependency { details ->
-            if ('org.jacoco' == details.requested.group) {
-                details.useVersion "0.8.8"
-            }
-        }
-    }
 }
 
 def apikeyPropertiesFile = rootProject.file("apikey.properties")
@@ -64,12 +37,7 @@ android {
                     '-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi',
             ]
         }
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-                excludes = ['jdk.internal.*']       //This line
-            }
-        }
+
         unitTests.includeAndroidResources = true
         unitTests.returnDefaultValues = true
     }
@@ -115,6 +83,8 @@ android {
 
     pitest {
         targetClasses.set(['com.example.*'])
+        timeoutConstInMillis.set(20000)
+        verbose.set(true)
         excludeMockableAndroidJar.set(true)
     }
 
@@ -142,7 +112,6 @@ dependencies {
 //    implementation project(':librespot-android-sink')
     implementation 'uk.uuid.slf4j:slf4j-android:1.7.36-0'
     implementation "androidx.activity:activity:1.4.0"
-    implementation 'org.jacoco:org.jacoco.core:0.8.8'
 
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.20.3"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
