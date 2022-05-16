@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.androidmusicplayer.ui.component.Player
+import com.example.androidmusicplayer.ui.screen.AppScreen
 import com.example.androidmusicplayer.ui.theme.AndroidMusicPlayerTheme
 
 @Composable

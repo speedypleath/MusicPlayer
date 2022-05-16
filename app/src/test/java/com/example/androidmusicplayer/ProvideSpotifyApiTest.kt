@@ -4,9 +4,7 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.launchActivity
-import com.example.androidmusicplayer.AndroidMusicPlayer
 import com.example.androidmusicplayer.data.api.SpotifyApi
-import com.example.androidmusicplayer.ui.MainActivity
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import org.junit.Test
@@ -31,9 +29,6 @@ class ProvideSpotifyApiTest: AutoCloseKoinTest() {
             scenario.moveToState(Lifecycle.State.CREATED).onActivity {
                 it.spotifyApi.loadEndpoints("test-token")
                 assertTrue(it.spotifyApi.isInitialized)
-//                val spotifyApi: SpotifyApi = get()
-//                val clone = get<SpotifyApi>()
-//                spotifyApi shouldBe clone
             }
         }
 

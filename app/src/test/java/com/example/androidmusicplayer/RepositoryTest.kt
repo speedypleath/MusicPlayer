@@ -1,7 +1,6 @@
 package com.example.androidmusicplayer
 
 import com.example.androidmusicplayer.data.repository.SongRepository
-import com.example.androidmusicplayer.ui.MainActivity
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.test.get

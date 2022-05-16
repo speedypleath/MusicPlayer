@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
 import com.example.androidmusicplayer.data.api.SpotifyApi
-import com.example.androidmusicplayer.ui.MainActivity
 import com.example.androidmusicplayer.web.SpotifyApiEndpoint
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest

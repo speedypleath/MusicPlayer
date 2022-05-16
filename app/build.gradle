@@ -51,10 +51,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        androidTest.java.srcDirs += "src/sharedTest/java"
-        test.java.srcDirs += "src/sharedTest/java"
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -98,6 +94,7 @@ android {
         keepStartingWith "android.database"
         keepStartingWith "androidx.activity"
     }
+    namespace 'com.example.androidmusicplayer'
 }
 
 dependencies {
@@ -112,6 +109,9 @@ dependencies {
 //    implementation project(':librespot-android-sink')
     implementation 'uk.uuid.slf4j:slf4j-android:1.7.36-0'
     implementation "androidx.activity:activity:1.4.0"
+
+    // Icons
+    implementation("br.com.devsrsouza.compose.icons.android:font-awesome:1.0.0")
 
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.20.3"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

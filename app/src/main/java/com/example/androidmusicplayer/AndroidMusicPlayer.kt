@@ -22,8 +22,8 @@ import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.data.truth.MediaStoreDataSource
 import com.example.androidmusicplayer.data.truth.SpotifyDataSource
 import com.example.androidmusicplayer.ui.App
-import com.example.androidmusicplayer.ui.MainActivity
-import com.example.androidmusicplayer.ui.MainViewModel
+import com.example.androidmusicplayer.ui.viewmodel.MainViewModel
+import com.example.androidmusicplayer.ui.viewmodel.SettingsViewModel
 import com.example.androidmusicplayer.util.CLIENT_ID
 import com.example.androidmusicplayer.util.REDIRECT_URI
 import com.example.androidmusicplayer.util.Status
@@ -58,6 +58,9 @@ class AndroidMusicPlayer : Application() {
         factory { ImageApi(androidContext()) }
         viewModel {
             MainViewModel(get())
+        }
+        viewModel {
+            SettingsViewModel(get(), get())
         }
     }
 

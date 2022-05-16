@@ -1,15 +1,11 @@
-package com.example.androidmusicplayer.ui
-
+package com.example.androidmusicplayer.ui.component
 
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -22,28 +18,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.androidmusicplayer.model.song.Song
-import org.koin.androidx.compose.getViewModel
-
-@Composable
-fun MainScreen(
-    mainViewModel: MainViewModel = getViewModel()
-) {
-    mainViewModel.fetchSongs()
-    val songs by mainViewModel.songs.observeAsState()
-    songs?.data?.let { SongList(songList = it) }
-}
-
-@Composable
-fun SongList(
-    songList: List<Song>
-) {
-    Log.d("Song List", "Initialize song list")
-    LazyColumn {
-        items(songList.size) { index ->
-            SongTile(songList[index])
-        }
-    }
-}
 
 @Composable
 fun SongTile(

@@ -7,7 +7,6 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.data.truth.MediaStoreDataSource
-import com.example.androidmusicplayer.ui.MainActivity
 import com.example.androidmusicplayer.util.Status
 import org.junit.Test
 import org.junit.runner.RunWith

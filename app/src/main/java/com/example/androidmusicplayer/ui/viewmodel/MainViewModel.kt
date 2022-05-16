@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer.ui
+package com.example.androidmusicplayer.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

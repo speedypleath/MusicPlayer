@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.await
 
 class SpotifyDataSource(
-    val spotifyApi: SpotifyApi,
+    private val spotifyApi: SpotifyApi,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend fun fetchSongs(): List<Song> =

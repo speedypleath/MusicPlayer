@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer.ui
+package com.example.androidmusicplayer.ui.screen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
