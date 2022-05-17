@@ -16,17 +16,39 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AndroidMusicPlayer">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AndroidMusicPlayer">
             <intent-filter>
-                <action android:name="androidx.media3.session.MediaLibraryService"/>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.PlayerActivity">
+        </activity>
+
+        <activity
+            android:name=".activity.PlaylistActivity">
+        </activity>
+
+        <activity
+            android:name=".activity.LibraryActivity">
+        </activity>
+
+        <service
+            android:name=".PlayerService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.media3.session.MediaSessionService"/>
+                <action android:name="android.media.browse.MediaBrowserService"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

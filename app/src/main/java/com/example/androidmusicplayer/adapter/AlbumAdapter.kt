@@ -1,6 +1,6 @@
-package com.example.androidmusicplayer.adapters
+package com.example.androidmusicplayer.adapter
 
-import com.example.androidmusicplayer.ImageApi
+import com.example.androidmusicplayer.data.api.ImageApi
 import com.example.androidmusicplayer.data.dao.AlbumDao
 import com.example.androidmusicplayer.model.album.MediaStoreAlbum
 import com.example.androidmusicplayer.model.album.RoomAlbum

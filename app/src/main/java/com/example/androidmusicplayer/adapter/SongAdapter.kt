@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer.adapters
+package com.example.androidmusicplayer.adapter
 
 import android.graphics.BitmapFactory
 import android.net.Uri

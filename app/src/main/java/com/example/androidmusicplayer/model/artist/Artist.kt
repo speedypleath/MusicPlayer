@@ -1,7 +1,7 @@
 package com.example.androidmusicplayer.model.artist
 
 import android.graphics.Bitmap
-import com.example.androidmusicplayer.adapters.ArtistAdapter
+import com.example.androidmusicplayer.adapter.ArtistAdapter
 import com.example.androidmusicplayer.model.interfaces.Model
 import org.koin.core.component.inject
 

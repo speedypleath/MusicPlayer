@@ -28,7 +28,7 @@ class MediaStoreApi(
 
     fun loadSongs(): MutableList<MediaStoreSong> {
         if(!initialized)
-            requestPermission()
+            return mutableListOf()
         val songList = mutableListOf<MediaStoreSong>()
         val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)

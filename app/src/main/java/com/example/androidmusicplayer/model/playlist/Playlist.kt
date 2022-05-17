@@ -2,7 +2,7 @@ package com.example.androidmusicplayer.model.playlist
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.example.androidmusicplayer.adapters.PlaylistAdapter
+import com.example.androidmusicplayer.adapter.PlaylistAdapter
 import com.example.androidmusicplayer.model.interfaces.Model
 import org.koin.core.component.inject
 

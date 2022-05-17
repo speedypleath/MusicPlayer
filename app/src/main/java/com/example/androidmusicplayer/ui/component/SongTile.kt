@@ -1,7 +1,9 @@
 package com.example.androidmusicplayer.ui.component
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,13 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.androidmusicplayer.activity.PlayerActivity
+import com.example.androidmusicplayer.activity.PlaylistActivity
 import com.example.androidmusicplayer.model.song.Song
 
 @Composable
 fun SongTile(
     song: Song
 ) {
-    Log.d("Song", (song.image == null).toString())
+    val context = LocalContext.current
+
     val painter: Painter = if(song.image == null)
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
@@ -40,8 +45,11 @@ fun SongTile(
             .padding(
                 horizontal = 4.dp,
                 vertical = 8.dp
-            ),
-        verticalAlignment = Alignment.CenterVertically
+            )
+            .clickable {
+                val intent = PlaylistActivity.createIntent(context, "[rootID]")
+                context.startActivity(intent) },
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             painter = painter,

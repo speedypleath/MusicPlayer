@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.example.androidmusicplayer.adapters.ArtistAdapter
+import com.example.androidmusicplayer.adapter.ArtistAdapter
 import com.example.androidmusicplayer.model.interfaces.Model
 import com.example.androidmusicplayer.model.interfaces.RoomModel
 import org.koin.core.component.inject

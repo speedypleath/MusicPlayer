@@ -5,25 +5,24 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import coil.disk.DiskCache
 import coil.imageLoader
-import com.example.androidmusicplayer.adapters.AlbumAdapter
-import com.example.androidmusicplayer.adapters.ArtistAdapter
-import com.example.androidmusicplayer.adapters.SongAdapter
+import com.example.androidmusicplayer.activity.MainActivity
+import com.example.androidmusicplayer.adapter.AlbumAdapter
+import com.example.androidmusicplayer.adapter.ArtistAdapter
+import com.example.androidmusicplayer.adapter.SongAdapter
 import com.example.androidmusicplayer.data.AppDatabase
+import com.example.androidmusicplayer.data.api.ImageApi
 import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.data.api.SpotifyApi
 import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.data.truth.MediaStoreDataSource
 import com.example.androidmusicplayer.data.truth.SpotifyDataSource
-import com.example.androidmusicplayer.ui.App
-import com.example.androidmusicplayer.ui.viewmodel.MainViewModel
-import com.example.androidmusicplayer.ui.viewmodel.SettingsViewModel
+import com.example.androidmusicplayer.ui.viewmodel.*
 import com.example.androidmusicplayer.util.CLIENT_ID
 import com.example.androidmusicplayer.util.REDIRECT_URI
 import com.example.androidmusicplayer.util.Status
@@ -33,6 +32,7 @@ import com.spotify.sdk.android.auth.AuthorizationResponse
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -45,29 +45,39 @@ class AndroidMusicPlayer : Application() {
         single { provideSpotifyDataSource(get()) }
         single { provideMediaStoreDataSource(get()) }
         single { provideSongAdapter( get()) }
-        single { provideArtistAdapter(androidContext(), get()) }
-        single { provideAlbumAdapter(androidContext(), get()) }
+        single { provideArtistAdapter(androidApplication(), get()) }
+        single { provideAlbumAdapter(androidApplication(), get()) }
         single { provideSpotifyApi(get()) }
         single { provideMediaStoreApi(get()) }
-        single { provideTestDatabase(androidContext()) }
+        single { provideTestDatabase(androidApplication()) }
         single {
             PreferenceDataStoreFactory.create {
-                androidContext().preferencesDataStoreFile("preferences")
+                androidApplication().preferencesDataStoreFile("preferences")
             }
         }
-        factory { ImageApi(androidContext()) }
+        factory { ImageApi(androidApplication()) }
         viewModel {
             MainViewModel(get())
         }
         viewModel {
             SettingsViewModel(get(), get())
         }
+        viewModel {
+            PlaylistViewModel()
+        }
+        single {
+            params -> PlayerViewModel(params.get())
+        }
+        single {
+            LibraryViewModel()
+        }
     }
 
     val testModule = module {
         appModule
     }
-    fun provideSpotifyApi(activity: ComponentActivity): SpotifyApi {
+
+    private fun provideSpotifyApi(activity: ComponentActivity): SpotifyApi {
         val api = SpotifyApi()
 
         val launcher =
@@ -77,9 +87,7 @@ class AndroidMusicPlayer : Application() {
                     val token = AuthorizationClient.getResponse(activityResult.resultCode, activityResult.data).accessToken
                     Log.d("Main activity", "Spotify login token: $token")
                     api.loadEndpoints(token)
-                    activity.setContent {
-                        App()
-                    }
+                    api.isInitialized
                 }
             }
 
@@ -103,7 +111,7 @@ class AndroidMusicPlayer : Application() {
         return api
     }
 
-    fun provideMediaStoreApi(activity: MainActivity): MediaStoreApi {
+    private fun provideMediaStoreApi(activity: MainActivity): MediaStoreApi {
         val api = MediaStoreApi(activity.applicationContext)
 
         val launcher =
@@ -111,6 +119,7 @@ class AndroidMusicPlayer : Application() {
                 if (isGranted) {
                     Log.d("Main activity", "Permission granted")
                     activity.activityResult.value = Status.SUCCESS
+                    api.initialized = true
                 } else {
                     Log.d("Main activity", "No permission")
                     activity.activityResult.value = Status.ERROR
@@ -122,42 +131,42 @@ class AndroidMusicPlayer : Application() {
         return api
     }
 
-    fun provideRepository(mediaStoreDataSource: MediaStoreDataSource, spotifyDataSource: SpotifyDataSource): SongRepository =
+    private fun provideRepository(mediaStoreDataSource: MediaStoreDataSource, spotifyDataSource: SpotifyDataSource): SongRepository =
         SongRepository(
             mediaStoreDataSource,
             spotifyDataSource
         )
 
-    fun provideSpotifyDataSource(spotifyApi: SpotifyApi): SpotifyDataSource =
+    private fun provideSpotifyDataSource(spotifyApi: SpotifyApi): SpotifyDataSource =
         SpotifyDataSource(
             spotifyApi,
             Dispatchers.IO,
         )
 
-    fun provideTestDatabase(context: Context): AppDatabase =
+    private fun provideTestDatabase(context: Context): AppDatabase =
         Room.inMemoryDatabaseBuilder(
             context, AppDatabase::class.java)
             .allowMainThreadQueries()
             .build()
 
-    fun provideMediaStoreDataSource(mediaStoreApi: MediaStoreApi): MediaStoreDataSource =
+    private fun provideMediaStoreDataSource(mediaStoreApi: MediaStoreApi): MediaStoreDataSource =
         MediaStoreDataSource(
             mediaStoreApi,
             Dispatchers.IO
         )
 
-    fun provideSongAdapter(appDatabase: AppDatabase): SongAdapter = SongAdapter(
+    private fun provideSongAdapter(appDatabase: AppDatabase): SongAdapter = SongAdapter(
         appDatabase.artistDao(),
         appDatabase.albumDao(),
         appDatabase.songDao()
     )
 
-    fun provideArtistAdapter(context: Context, appDatabase: AppDatabase): ArtistAdapter = ArtistAdapter(
+    private fun provideArtistAdapter(context: Context, appDatabase: AppDatabase): ArtistAdapter = ArtistAdapter(
         ImageApi(context),
         appDatabase.artistDao()
     )
 
-    fun provideAlbumAdapter(context: Context, appDatabase: AppDatabase): AlbumAdapter = AlbumAdapter(
+    private fun provideAlbumAdapter(context: Context, appDatabase: AppDatabase): AlbumAdapter = AlbumAdapter(
         ImageApi(context),
         appDatabase.albumDao()
     )
@@ -167,7 +176,7 @@ class AndroidMusicPlayer : Application() {
         startKoin {
             androidContext(this@AndroidMusicPlayer)
             androidLogger()
-            modules(appModule, testModule)
+            modules(appModule)
         }
         applicationContext.imageLoader
             .newBuilder()

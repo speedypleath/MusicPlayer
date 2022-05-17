@@ -2,6 +2,7 @@ package com.example.androidmusicplayer
 
 import android.util.Log
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.example.androidmusicplayer.activity.MainActivity
 import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.util.Status
 import kotlinx.coroutines.delay

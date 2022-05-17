@@ -1,7 +1,7 @@
 package com.example.androidmusicplayer.model.song
 
 import android.graphics.Bitmap
-import com.example.androidmusicplayer.adapters.SongAdapter
+import com.example.androidmusicplayer.adapter.SongAdapter
 import com.example.androidmusicplayer.model.album.Album
 import com.example.androidmusicplayer.model.artist.Artist
 import com.example.androidmusicplayer.model.interfaces.Model

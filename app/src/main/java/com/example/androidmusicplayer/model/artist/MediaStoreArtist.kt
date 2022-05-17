@@ -1,7 +1,7 @@
 package com.example.androidmusicplayer.model.artist
 
 import android.net.Uri
-import com.example.androidmusicplayer.adapters.ArtistAdapter
+import com.example.androidmusicplayer.adapter.ArtistAdapter
 import com.example.androidmusicplayer.model.interfaces.MediaStoreModel
 import com.example.androidmusicplayer.model.interfaces.Model
 import org.koin.core.component.inject

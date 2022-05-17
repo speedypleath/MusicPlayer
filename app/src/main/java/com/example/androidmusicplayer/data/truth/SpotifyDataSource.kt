@@ -12,11 +12,14 @@ class SpotifyDataSource(
 ) {
     suspend fun fetchSongs(): List<Song> =
         withContext(ioDispatcher) {
-            spotifyApi.endpoint.getTracks().await().items.mapNotNull { spotifySong -> spotifySong.fromSpotify() }
+            if(spotifyApi.isInitialized)
+                spotifyApi.endpoint!!.getTracks().await().items.mapNotNull { spotifySong -> spotifySong.fromSpotify() }
+            else
+                listOf()
         }
 
     suspend fun getSong(songId: String) =
         withContext(ioDispatcher) {
-            spotifyApi.endpoint.getSong(songId).await()
+            spotifyApi.endpoint!!.getSong(songId).await()
         }
 }

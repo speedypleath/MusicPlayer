@@ -1,8 +1,9 @@
 package com.example.androidmusicplayer.data.api
 
 import android.content.Intent
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
-import com.example.androidmusicplayer.adapters.ResponseAdapter
+import com.example.androidmusicplayer.adapter.ResponseAdapter
 import com.example.androidmusicplayer.web.AuthorizationInterceptor
 import com.example.androidmusicplayer.web.SpotifyApiEndpoint
 import com.squareup.moshi.Moshi
@@ -12,8 +13,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class SpotifyApi {
-    lateinit var endpoint: SpotifyApiEndpoint
-    val isInitialized get() = ::endpoint.isInitialized
+    var endpoint: SpotifyApiEndpoint? = null
+    var isInitialized = false
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
     private lateinit var intent: Intent
@@ -25,12 +26,10 @@ class SpotifyApi {
 
     fun requestPermission() {
         launcher.launch(intent)
+        this.isInitialized = true
     }
 
     fun loadEndpoints(token: String) {
-        if(isInitialized)
-            return
-
         val moshi = Moshi.Builder()
             .add(ResponseAdapter())
             .addLast(KotlinJsonAdapterFactory())
@@ -46,5 +45,7 @@ class SpotifyApi {
             .client(client)
             .build()
             .create(SpotifyApiEndpoint::class.java)
+
+        Log.d("SpotifyApi", "Endpoint updated $token")
     }
 }

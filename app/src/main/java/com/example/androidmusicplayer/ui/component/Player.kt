@@ -20,14 +20,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.example.androidmusicplayer.ui.theme.White
+import com.example.androidmusicplayer.ui.viewmodel.PlayerViewModel
+import org.koin.android.compat.SharedViewModelCompat.getSharedViewModel
+import org.koin.android.compat.SharedViewModelCompat.sharedViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
-@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 fun Player() {
+//    val playerViewModel: PlayerViewModel = getViewModel()
     val isPlaying = remember { mutableStateOf(false) }
     val icon = if(isPlaying.value)
         Icons.Default.Add

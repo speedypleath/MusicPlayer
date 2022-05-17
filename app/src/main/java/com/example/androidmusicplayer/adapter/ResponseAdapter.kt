@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer.adapters
+package com.example.androidmusicplayer.adapter
 
 import com.example.androidmusicplayer.model.SpotifyResponse
 import com.squareup.moshi.FromJson

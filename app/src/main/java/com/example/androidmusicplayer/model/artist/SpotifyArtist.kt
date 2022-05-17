@@ -1,7 +1,7 @@
 package com.example.androidmusicplayer.model.artist
 
 import androidx.room.Entity
-import com.example.androidmusicplayer.adapters.ArtistAdapter
+import com.example.androidmusicplayer.adapter.ArtistAdapter
 import com.example.androidmusicplayer.model.SpotifyImage
 import com.example.androidmusicplayer.model.interfaces.Model
 import com.example.androidmusicplayer.model.interfaces.SpotifyModel

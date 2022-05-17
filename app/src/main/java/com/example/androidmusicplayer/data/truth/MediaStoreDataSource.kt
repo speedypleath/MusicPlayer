@@ -11,6 +11,9 @@ class MediaStoreDataSource(
 ) {
     suspend fun fetchSongs(): MutableList<Song> =
         withContext(ioDispatcher) {
-            mediaStoreApi.loadSongs().map { song -> song.fromMediaStore() } as MutableList<Song>
+            if (mediaStoreApi.initialized)
+                mediaStoreApi.loadSongs().map { song -> song.fromMediaStore() } as MutableList<Song>
+            else
+                mutableListOf()
         }
 }

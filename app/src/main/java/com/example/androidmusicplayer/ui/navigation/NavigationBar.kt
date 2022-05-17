@@ -1,5 +1,6 @@
-package com.example.androidmusicplayer.ui
+package com.example.androidmusicplayer.ui.navigation
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.example.androidmusicplayer.ui.screen.AppScreen
 import com.example.androidmusicplayer.ui.theme.White
 
@@ -23,7 +26,7 @@ import com.example.androidmusicplayer.ui.theme.White
 fun NavigationBar(
     allScreens: List<AppScreen>,
     onTabSelected: (AppScreen) -> Unit,
-    currentScreen: AppScreen
+    currentScreen: AppScreen,
 ) {
     BottomNavigation(
         modifier = Modifier

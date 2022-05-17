@@ -1,6 +1,6 @@
 package com.example.androidmusicplayer.model.song
 
-import com.example.androidmusicplayer.adapters.SongAdapter
+import com.example.androidmusicplayer.adapter.SongAdapter
 import com.example.androidmusicplayer.model.album.SpotifyAlbum
 import com.example.androidmusicplayer.model.artist.SpotifyArtist
 import com.example.androidmusicplayer.model.interfaces.Model

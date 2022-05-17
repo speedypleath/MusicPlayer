@@ -11,6 +11,7 @@ fun SongList(
     songList: List<Song>
 ) {
     Log.d("Song List", "Initialize song list")
+
     LazyColumn {
         items(songList.size) { index ->
             SongTile(songList[index])

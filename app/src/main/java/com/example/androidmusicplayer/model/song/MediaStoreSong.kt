@@ -1,7 +1,7 @@
 package com.example.androidmusicplayer.model.song
 
 import android.net.Uri
-import com.example.androidmusicplayer.adapters.SongAdapter
+import com.example.androidmusicplayer.adapter.SongAdapter
 import com.example.androidmusicplayer.model.album.MediaStoreAlbum
 import com.example.androidmusicplayer.model.artist.MediaStoreArtist
 import com.example.androidmusicplayer.model.interfaces.MediaStoreModel

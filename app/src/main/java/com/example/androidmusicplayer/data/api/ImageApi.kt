@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer
+package com.example.androidmusicplayer.data.api
 
 import android.content.Context
 import android.graphics.Bitmap
