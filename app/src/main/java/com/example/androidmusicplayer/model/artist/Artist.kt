@@ -12,4 +12,8 @@ class Artist(
     var uriString: String?,
 ): Model<Artist> {
     private val adapter: ArtistAdapter by inject()
+
+    suspend fun toRoom() {
+        adapter.toRoom(this)
+    }
 }

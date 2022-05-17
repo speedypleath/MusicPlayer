@@ -25,7 +25,7 @@ data class RoomPlaylist(
     @delegate:Ignore
     private val adapter: PlaylistAdapter by inject()
 
-    override fun fromRoom(): Model<Playlist>? {
+    fun fromRoom(): Model<Playlist>? {
         return adapter.roomToPlaylist(this)
     }
 }

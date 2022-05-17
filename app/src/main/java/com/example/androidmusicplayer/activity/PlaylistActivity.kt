@@ -21,9 +21,14 @@ class PlaylistActivity : ComponentActivity() {
         }
     }
 
+    private fun openPlayer() {
+        val intent = Intent(this, PlayerActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun onStart() {
         super.onStart()
-        playlistViewModel.init(applicationContext, intent)
+        playlistViewModel.init(applicationContext, intent) { openPlayer() }
         setContent {
             Playlist(playlistViewModel)
         }

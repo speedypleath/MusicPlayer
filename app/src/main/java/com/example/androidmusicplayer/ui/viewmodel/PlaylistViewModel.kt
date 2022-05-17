@@ -9,27 +9,29 @@ import androidx.lifecycle.ViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.SessionToken
-import com.example.androidmusicplayer.PlayerService
+import com.example.androidmusicplayer.media.PlayerService
 import com.example.androidmusicplayer.activity.PlaylistActivity
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 
 class PlaylistViewModel: ViewModel() {
     private lateinit var browserFuture: ListenableFuture<MediaBrowser>
+    private lateinit var openPlayer: () -> Unit
     private val browser: MediaBrowser?
         get() = if (browserFuture.isDone) browserFuture.get() else null
     private val _subitems = MutableLiveData<List<MediaItem>>()
     val subitems: LiveData<List<MediaItem>>
         get() = _subitems
 
-    fun init(context: Context, intent: Intent) {
+    fun init(context: Context, intent: Intent, openPlayer: () -> Unit) {
         browserFuture =
             MediaBrowser.Builder(
                 context,
                 SessionToken(context, ComponentName(context, PlayerService::class.java))
-            )
-                .buildAsync()
+            ).buildAsync()
+
         browserFuture.addListener({ displayFolder(intent) }, MoreExecutors.directExecutor())
+        this.openPlayer = openPlayer
     }
 
     fun onClick(position: Int) = run {
@@ -39,6 +41,7 @@ class PlaylistViewModel: ViewModel() {
         browser.prepare()
         browser.seekToDefaultPosition(position)
         browser.play()
+        openPlayer()
     }
 
     fun releaseBrowser() {
@@ -51,9 +54,7 @@ class PlaylistViewModel: ViewModel() {
         val mediaItemFuture = browser.getItem(id)
         val childrenFuture = browser.getChildren(id,0, Int.MAX_VALUE, null)
         mediaItemFuture.addListener(
-            {
-                val result = mediaItemFuture.get()
-            },
+            { },
             MoreExecutors.directExecutor()
         )
         childrenFuture.addListener(

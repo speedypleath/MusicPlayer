@@ -3,31 +3,36 @@ package com.example.androidmusicplayer.data.dao
 import androidx.room.*
 import com.example.androidmusicplayer.model.playlist.PlaylistWithSongs
 import com.example.androidmusicplayer.model.song.RoomSong
+import com.example.androidmusicplayer.model.song.Song
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
-    @Insert
-    fun insertAll(vararg songs: RoomSong)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(vararg songs: RoomSong)
 
     @Update
-    fun updateAll(vararg songs: RoomSong)
+    suspend fun updateAll(vararg songs: RoomSong)
 
     @Delete
-    fun deleteAll(vararg songs: RoomSong)
+    suspend fun deleteAll(vararg songs: RoomSong)
+
+    @Query("SELECT * FROM song")
+    suspend fun getAll(): List<RoomSong>
 
     @Query("SELECT * FROM song WHERE uri = :uri")
-    fun getByUri(uri: String): RoomSong?
+    suspend fun getByUri(uri: String): RoomSong
 
     @Query("SELECT * FROM song WHERE title = :song")
-    fun getByName(song: String): List<RoomSong>?
+    suspend fun getByName(song: String): RoomSong
 
     @Query("SELECT * FROM song WHERE album = :album")
-    fun getByAlbum(album: String): List<RoomSong>?
+    suspend fun getByAlbum(album: String): List<RoomSong>
 
     @Query("SELECT * FROM song WHERE artist = :artist")
-    fun getByArtist(artist: String): List<RoomSong>?
+    suspend fun getByArtist(artist: String): List<RoomSong>
 
     @Transaction
     @Query("SELECT * FROM playlist")
-    fun getPlaylistsWithSongs(): List<PlaylistWithSongs>?
+    suspend fun getPlaylistsWithSongs(): List<PlaylistWithSongs>
 }

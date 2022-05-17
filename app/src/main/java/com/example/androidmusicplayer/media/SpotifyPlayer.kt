@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer
+package com.example.androidmusicplayer.media
 
 import android.content.Context
 import android.util.Log

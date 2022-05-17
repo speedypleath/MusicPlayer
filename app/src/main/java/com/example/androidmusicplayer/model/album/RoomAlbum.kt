@@ -25,7 +25,7 @@ data class RoomAlbum(
     @delegate:Ignore
     private val adapter: AlbumAdapter by inject()
 
-    override fun fromRoom(): Model<Album>? {
+    fun fromRoom(): Album {
         return adapter.fromRoom(this)
     }
 }

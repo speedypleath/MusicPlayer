@@ -24,7 +24,7 @@ data class RoomArtist(
     @delegate:Ignore
     private val adapter: ArtistAdapter by inject()
 
-    override fun fromRoom(): Artist {
+    fun fromRoom(): Artist {
         return adapter.fromRoom(this)
     }
 }

@@ -41,7 +41,7 @@ import org.koin.dsl.module
 
 class AndroidMusicPlayer : Application() {
     private val appModule = module {
-        single { provideRepository(get(), get()) }
+        single { provideRepository(get(), get(), androidApplication()) }
         single { provideSpotifyDataSource(get()) }
         single { provideMediaStoreDataSource(get()) }
         single { provideSongAdapter( get()) }
@@ -66,7 +66,7 @@ class AndroidMusicPlayer : Application() {
             PlaylistViewModel()
         }
         single {
-            params -> PlayerViewModel(params.get())
+            PlayerViewModel(get())
         }
         single {
             LibraryViewModel()
@@ -131,10 +131,11 @@ class AndroidMusicPlayer : Application() {
         return api
     }
 
-    private fun provideRepository(mediaStoreDataSource: MediaStoreDataSource, spotifyDataSource: SpotifyDataSource): SongRepository =
+    private fun provideRepository(mediaStoreDataSource: MediaStoreDataSource, spotifyDataSource: SpotifyDataSource, context: Context): SongRepository =
         SongRepository(
             mediaStoreDataSource,
-            spotifyDataSource
+            spotifyDataSource,
+            AppDatabase.getDatabase(context)
         )
 
     private fun provideSpotifyDataSource(spotifyApi: SpotifyApi): SpotifyDataSource =
@@ -144,10 +145,7 @@ class AndroidMusicPlayer : Application() {
         )
 
     private fun provideTestDatabase(context: Context): AppDatabase =
-        Room.inMemoryDatabaseBuilder(
-            context, AppDatabase::class.java)
-            .allowMainThreadQueries()
-            .build()
+        AppDatabase.getDatabase(context)
 
     private fun provideMediaStoreDataSource(mediaStoreApi: MediaStoreApi): MediaStoreDataSource =
         MediaStoreDataSource(
@@ -156,8 +154,6 @@ class AndroidMusicPlayer : Application() {
         )
 
     private fun provideSongAdapter(appDatabase: AppDatabase): SongAdapter = SongAdapter(
-        appDatabase.artistDao(),
-        appDatabase.albumDao(),
         appDatabase.songDao()
     )
 

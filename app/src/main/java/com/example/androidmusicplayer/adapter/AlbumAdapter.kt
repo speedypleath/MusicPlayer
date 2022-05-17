@@ -5,7 +5,6 @@ import com.example.androidmusicplayer.data.dao.AlbumDao
 import com.example.androidmusicplayer.model.album.MediaStoreAlbum
 import com.example.androidmusicplayer.model.album.RoomAlbum
 import com.example.androidmusicplayer.model.album.SpotifyAlbum
-import com.example.androidmusicplayer.model.artist.SpotifyArtist
 import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.web.annotations.Album
 import com.squareup.moshi.FromJson
@@ -54,27 +53,13 @@ class AlbumAdapter(
         )
     }
 
-    fun spotifyToRoom(spotifyAlbum: SpotifyArtist) {
-        val image = if(spotifyAlbum.images != null)
-            spotifyAlbum.images!![0].url
-        else
-            null
+    suspend fun toRoom(album: AlbumModel) {
 
         val roomAlbum = RoomAlbum(
-            spotifyAlbum.artistId!!,
-            spotifyAlbum.name!!,
-            image!!,
-            spotifyAlbum.uriString!!
-        )
-        albumDao.insert(roomAlbum)
-    }
-
-    fun mediaStoreToRoom(mediaStoreAlbum: MediaStoreAlbum) {
-        val roomAlbum = RoomAlbum(
-            mediaStoreAlbum.albumId.toString(),
-            mediaStoreAlbum.name,
-            "content://media/external/audio/albumart/" + mediaStoreAlbum.albumId.toString(),
-            mediaStoreAlbum.uri.encodedPath!!
+            album.albumId,
+            album.name,
+            album.image.toString(),
+            album.uriString
         )
         albumDao.insert(roomAlbum)
     }

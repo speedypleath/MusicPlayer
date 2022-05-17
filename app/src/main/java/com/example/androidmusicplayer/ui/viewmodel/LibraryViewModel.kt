@@ -9,7 +9,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.SessionToken
-import com.example.androidmusicplayer.PlayerService
+import com.example.androidmusicplayer.media.PlayerService
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 

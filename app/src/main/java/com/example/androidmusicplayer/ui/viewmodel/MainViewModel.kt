@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.model.song.Song
 import com.example.androidmusicplayer.util.Resource

@@ -18,4 +18,8 @@ data class Song(
     var uri: String?,
 ): Model<Song> {
     private val adapter: SongAdapter by inject()
+
+    suspend fun toRoom() {
+        adapter.toRoom(this)
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.androidmusicplayer
+package com.example.androidmusicplayer.media
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.TaskStackBuilder

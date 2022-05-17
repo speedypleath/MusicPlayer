@@ -17,9 +17,4 @@ class SpotifyDataSource(
             else
                 listOf()
         }
-
-    suspend fun getSong(songId: String) =
-        withContext(ioDispatcher) {
-            spotifyApi.endpoint!!.getSong(songId).await()
-        }
 }

@@ -5,18 +5,18 @@ import com.example.androidmusicplayer.model.album.RoomAlbum
 
 @Dao
 interface AlbumDao {
-    @Insert
-    fun insert(album: RoomAlbum)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(album: RoomAlbum)
 
     @Update
-    fun update(album: RoomAlbum)
+    suspend fun update(album: RoomAlbum)
 
     @Delete
-    fun delete(album: RoomAlbum)
+    suspend fun delete(album: RoomAlbum)
 
     @Query("SELECT * FROM album WHERE name = :album")
-    fun getByName(album: String): RoomAlbum?
+    suspend fun getByName(album: String): RoomAlbum
 
     @Query("SELECT * FROM album WHERE albumId = :album")
-    fun getById(album: String): RoomAlbum?
+    suspend fun getById(album: String): RoomAlbum
 }

@@ -37,8 +37,9 @@ import org.koin.androidx.compose.getViewModel
 
 @Preview
 @Composable
-fun Player() {
-//    val playerViewModel: PlayerViewModel = getViewModel()
+fun Player(
+    playerViewModel: PlayerViewModel = getViewModel()
+) {
     val isPlaying = remember { mutableStateOf(false) }
     val icon = if(isPlaying.value)
         Icons.Default.Add

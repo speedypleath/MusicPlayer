@@ -25,8 +25,4 @@ data class RoomSong(
     }
     @delegate:Ignore
     private val adapter: SongAdapter by inject()
-
-    override fun fromRoom(): Song? {
-        return adapter.fromRoom(this)
-    }
 }

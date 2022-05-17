@@ -12,4 +12,8 @@ data class Album(
     var uriString: String,
 ): Model<Album> {
     private val adapter: AlbumAdapter by inject()
+
+    suspend fun toRoom() {
+        adapter.toRoom(this)
+    }
 }

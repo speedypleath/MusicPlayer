@@ -54,27 +54,12 @@ class ArtistAdapter(
         )
     }
 
-    fun spotifyToRoom(spotifyArtist: SpotifyArtist) {
-        val image = if(spotifyArtist.images != null)
-            spotifyArtist.images!![0].url
-        else
-            null
-
+    suspend fun toRoom(artist: ArtistModel) {
         val roomArtist = RoomArtist(
-            spotifyArtist.artistId!!,
-            spotifyArtist.name!!,
-            image!!,
-            spotifyArtist.uriString!!
-        )
-        artistDao.insert(roomArtist)
-    }
-
-    fun mediaStoreToRoom(mediaStoreArtist: MediaStoreArtist) {
-        val roomArtist = RoomArtist(
-            mediaStoreArtist.artistId.toString(),
-            mediaStoreArtist.name,
-            "content://media/external/audio/albumart/" + mediaStoreArtist.artistId.toString(),
-            mediaStoreArtist.uri.encodedPath!!
+            artist.artistId,
+            artist.name,
+            artist.image.toString(),
+            artist.uriString!!
         )
         artistDao.insert(roomArtist)
     }
