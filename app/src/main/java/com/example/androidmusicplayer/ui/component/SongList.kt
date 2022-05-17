@@ -8,13 +8,14 @@ import com.example.androidmusicplayer.model.song.Song
 
 @Composable
 fun SongList(
-    songList: List<Song>
+    songList: List<Song>,
+    onClick: (Int) -> Unit
 ) {
     Log.d("Song List", "Initialize song list")
 
     LazyColumn {
         items(songList.size) { index ->
-            SongTile(songList[index])
+            SongTile(songList[index]) { onClick(index) }
         }
     }
 }

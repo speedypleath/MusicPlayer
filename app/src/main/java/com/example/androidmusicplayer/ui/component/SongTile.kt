@@ -25,10 +25,9 @@ import com.example.androidmusicplayer.model.song.Song
 
 @Composable
 fun SongTile(
-    song: Song
+    song: Song,
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-
     val painter: Painter = if(song.image == null)
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
@@ -46,9 +45,7 @@ fun SongTile(
                 horizontal = 4.dp,
                 vertical = 8.dp
             )
-            .clickable {
-                val intent = PlaylistActivity.createIntent(context, "[rootID]")
-                context.startActivity(intent) },
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(

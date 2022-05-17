@@ -30,7 +30,7 @@ fun Playlist(
                     null,
                     null
                 )
-                SongTile(song)
+                SongTile(song) { playlistViewModel.onClick(index) }
             }
         }
     }

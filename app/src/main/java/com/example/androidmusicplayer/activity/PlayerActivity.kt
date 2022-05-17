@@ -1,6 +1,8 @@
 package com.example.androidmusicplayer.activity
 
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
@@ -45,6 +47,7 @@ class PlayerActivity : ComponentActivity() {
             playerView
         }
     }
+
     override fun onStart() {
         super.onStart()
         Log.d("Player Activity", "Start!")

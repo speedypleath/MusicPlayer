@@ -1,6 +1,8 @@
 package com.example.androidmusicplayer
 
+import android.content.ContentUris
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
@@ -112,7 +114,10 @@ object MediaItemTree {
         val title = song.title
         val artist = if(song.artist != null) song.artist!!.name else "Unknown artist"
         val genre = "test"
-        val sourceUri = Uri.parse(song.uri)
+        val sourceUri = ContentUris.withAppendedId(
+            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+            song.songId.toLong()
+        )
         val imageUri = Uri.parse(song.imageUri)
         // key of such items in tree
         val idInTree = ITEM_PREFIX + id

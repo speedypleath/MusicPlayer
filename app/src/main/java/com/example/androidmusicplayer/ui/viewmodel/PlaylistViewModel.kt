@@ -32,6 +32,15 @@ class PlaylistViewModel: ViewModel() {
         browserFuture.addListener({ displayFolder(intent) }, MoreExecutors.directExecutor())
     }
 
+    fun onClick(position: Int) = run {
+        val browser = this.browser ?: return@run
+        browser.setMediaItems(subitems.value!!)
+        browser.shuffleModeEnabled = false
+        browser.prepare()
+        browser.seekToDefaultPosition(position)
+        browser.play()
+    }
+
     fun releaseBrowser() {
         MediaBrowser.releaseFuture(browserFuture)
     }

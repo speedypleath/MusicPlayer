@@ -14,6 +14,6 @@ fun MainScreen(
     mainViewModel.fetchSongs()
     val songs by mainViewModel.songs.observeAsState()
     songs?.data?.let {
-        SongList(songList = it)
+        SongList(songList = it) {}
     }
 }
