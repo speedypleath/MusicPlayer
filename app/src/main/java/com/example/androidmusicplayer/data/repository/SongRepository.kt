@@ -20,15 +20,8 @@ class SongRepository(
 
     suspend fun fetchSongs(refresh: Boolean = false): List<Song> {
         if (refresh || songs.isEmpty()) {
-            val songResult = mediaStoreDataSource.fetchSongs() + spotifyDataSource.fetchSongs()
-            songResult.forEach { song ->
-                song.artist?.toRoom()
-                song.album?.toRoom()
-                song.toRoom()
-            }
-
-            val databaseSongs = database.songDao().getAll()
-            val aux = databaseSongs.map { roomSong ->
+            val roomSongs = database.songDao().getAll()
+            val aux = roomSongs.map { roomSong ->
                 val roomArtist = database.artistDao().getById(roomSong.artist)
                 val artist = Artist(
                     roomArtist.artistId,
@@ -54,6 +47,7 @@ class SongRepository(
                     roomSong.uriString
                 )
             }
+
             aux.forEach { song ->
                 MediaItemTree.addNodeToTree(song)
             }
@@ -64,5 +58,29 @@ class SongRepository(
         }
 
         return mutex.withLock { this.songs }
+    }
+
+    suspend fun fetchMediaStore() {
+        val songResult = mediaStoreDataSource.fetchSongs()
+        songResult.forEach { song ->
+            song.artist?.toRoom()
+            song.album?.toRoom()
+            song.toRoom()
+        }
+    }
+
+    suspend fun fetchSpotify() {
+        val songResult = spotifyDataSource.fetchSongs()
+        songResult.forEach { song ->
+            song.artist?.toRoom()
+            song.album?.toRoom()
+            song.toRoom()
+        }
+    }
+
+    fun getSong(name: String): Song? {
+        return songs.find { song ->
+            song.title == name
+        }
     }
 }

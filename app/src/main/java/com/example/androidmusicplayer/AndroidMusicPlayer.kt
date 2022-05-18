@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.room.Room
 import coil.disk.DiskCache
 import coil.imageLoader
 import com.example.androidmusicplayer.activity.MainActivity
@@ -22,6 +21,7 @@ import com.example.androidmusicplayer.data.api.SpotifyApi
 import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.data.truth.MediaStoreDataSource
 import com.example.androidmusicplayer.data.truth.SpotifyDataSource
+import com.example.androidmusicplayer.ui.state.TreePathState
 import com.example.androidmusicplayer.ui.viewmodel.*
 import com.example.androidmusicplayer.util.CLIENT_ID
 import com.example.androidmusicplayer.util.REDIRECT_URI
@@ -56,25 +56,32 @@ class AndroidMusicPlayer : Application() {
             }
         }
         factory { ImageApi(androidApplication()) }
-        viewModel {
-            MainViewModel(get())
-        }
-        viewModel {
+
+        single {
             SettingsViewModel(get(), get())
-        }
-        viewModel {
-            PlaylistViewModel()
         }
         single {
             PlayerViewModel(get())
         }
         single {
-            LibraryViewModel()
+            LibraryViewModel(get())
+        }
+        single {
+            MainViewModel(get(), get())
+        }
+        single {
+            provideTreePath(androidApplication())
         }
     }
 
     val testModule = module {
         appModule
+    }
+
+    private fun provideTreePath(context: Context): TreePathState {
+        val treePathState = TreePathState()
+        treePathState.init(context)
+        return treePathState
     }
 
     private fun provideSpotifyApi(activity: ComponentActivity): SpotifyApi {

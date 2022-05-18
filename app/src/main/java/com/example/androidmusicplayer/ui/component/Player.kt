@@ -1,45 +1,48 @@
 package com.example.androidmusicplayer.ui.component
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.util.Log
+import android.view.animation.LinearInterpolator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.Icon
-import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.datasource.DataSource
-import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import com.example.androidmusicplayer.ui.theme.White
+import androidx.compose.ui.zIndex
 import com.example.androidmusicplayer.ui.viewmodel.PlayerViewModel
-import org.koin.android.compat.SharedViewModelCompat.getSharedViewModel
-import org.koin.android.compat.SharedViewModelCompat.sharedViewModel
 import org.koin.androidx.compose.getViewModel
 
-@Preview
+
 @Composable
 fun Player(
     playerViewModel: PlayerViewModel = getViewModel()
 ) {
+    var title = "No activity!"
+    var artist = ""
+
+    val song by playerViewModel.song.observeAsState()
+    val duration by playerViewModel.duration.observeAsState(initial = -1)
+    Log.d("PlayerView", "length: $duration")
+    if(song != null && song?.title != title) {
+        playerViewModel.player?.prepare()
+        title = song!!.title
+        artist = song!!.artist!!.name
+    }
+
     val isPlaying = remember { mutableStateOf(false) }
     val icon = if(isPlaying.value)
         Icons.Default.Add
@@ -58,11 +61,11 @@ fun Player(
                         Color.DarkGray.copy(alpha = 0.8f),
                         Color.Black,
                     ),
-                    endY = 60f,
+                    endY = 40f,
                 ),
             ),
         backgroundColor = Color.Transparent,
-        contentColor = White,
+        contentColor = Color.White,
         elevation = 0.dp
     ) {
         Column(
@@ -72,6 +75,10 @@ fun Player(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Column {
+                    Text(title)
+                    Text(artist)
+                }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -99,15 +106,14 @@ fun Player(
                             .fillMaxSize(1f)
                     )
                 }
+
             }
+
             LinearProgressIndicator(
-                progress = 0.4f,
+                progress = 0.5f,
                 modifier = Modifier
                     .fillMaxSize(1f)
-                    .wrapContentHeight(Alignment.Bottom, true),
-
-                backgroundColor = Color.Gray,
-                color = Color.Green,
+                    .wrapContentHeight(Alignment.Bottom, true)
             )
         }
     }

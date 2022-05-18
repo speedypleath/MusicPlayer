@@ -1,7 +1,5 @@
 package com.example.androidmusicplayer.ui.component
 
-import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,8 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.example.androidmusicplayer.activity.PlayerActivity
-import com.example.androidmusicplayer.activity.PlaylistActivity
 import com.example.androidmusicplayer.model.song.Song
 
 @Composable

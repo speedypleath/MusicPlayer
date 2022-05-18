@@ -26,7 +26,7 @@ enum class AppScreen(
                 Library.name -> Library
                 Settings.name -> Settings
                 null -> Home
-                else -> throw IllegalArgumentException("Route $route is not recognized.")
+                else -> Home
             }
     }
 }

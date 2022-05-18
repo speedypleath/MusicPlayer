@@ -18,6 +18,7 @@ object MediaItemTree {
     private const val ALBUM_ID = "[albumID]"
     private const val GENRE_ID = "[genreID]"
     private const val ARTIST_ID = "[artistID]"
+    const val RECENT_ID = "[recentID]"
     private const val ALBUM_PREFIX = "[album]"
     private const val GENRE_PREFIX = "[genre]"
     private const val ARTIST_PREFIX = "[artist]"
@@ -76,10 +77,21 @@ object MediaItemTree {
                     folderType = MediaMetadata.FOLDER_TYPE_MIXED
                 )
             )
+
+        treeNodes[RECENT_ID] =
+            MediaItemNode(
+                buildMediaItem(
+                    title = "Recently played",
+                    mediaId = RECENT_ID,
+                    isPlayable = true,
+                    folderType = MediaMetadata.FOLDER_TYPE_MIXED
+                )
+            )
+
         treeNodes[ALBUM_ID] =
             MediaItemNode(
                 buildMediaItem(
-                    title = "Album Folder",
+                    title = "Albums",
                     mediaId = ALBUM_ID,
                     isPlayable = false,
                     folderType = MediaMetadata.FOLDER_TYPE_MIXED
@@ -88,7 +100,7 @@ object MediaItemTree {
         treeNodes[ARTIST_ID] =
             MediaItemNode(
                 buildMediaItem(
-                    title = "Artist Folder",
+                    title = "Artists",
                     mediaId = ARTIST_ID,
                     isPlayable = false,
                     folderType = MediaMetadata.FOLDER_TYPE_MIXED
@@ -97,15 +109,17 @@ object MediaItemTree {
         treeNodes[GENRE_ID] =
             MediaItemNode(
                 buildMediaItem(
-                    title = "Genre Folder",
+                    title = "Genres",
                     mediaId = GENRE_ID,
                     isPlayable = false,
                     folderType = MediaMetadata.FOLDER_TYPE_MIXED
                 )
             )
+
         treeNodes[ROOT_ID]!!.addChild(ALBUM_ID)
         treeNodes[ROOT_ID]!!.addChild(ARTIST_ID)
         treeNodes[ROOT_ID]!!.addChild(GENRE_ID)
+        treeNodes[ROOT_ID]!!.addChild(RECENT_ID)
     }
 
     fun addNodeToTree(song: Song) {
@@ -115,10 +129,13 @@ object MediaItemTree {
         val title = song.title
         val artist = if(song.artist != null) song.artist!!.name else "Unknown album"
         val genre = "test"
-        val sourceUri = ContentUris.withAppendedId(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            song.songId.toLong()
-        )
+        val sourceUri = if(song.songId.toDoubleOrNull() != null)
+            ContentUris.withAppendedId(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                song.songId.toLong()
+            )
+        else
+            Uri.parse(song.uri)
         val imageUri = Uri.parse("content://media/external/audio/albumart/" + song.songId)
         // key of such items in tree
         val idInTree = ITEM_PREFIX + id
@@ -186,6 +203,8 @@ object MediaItemTree {
             treeNodes[GENRE_ID]!!.addChild(genreFolderIdInTree)
         }
         treeNodes[genreFolderIdInTree]!!.addChild(idInTree)
+
+        treeNodes[RECENT_ID]!!.addChild(idInTree)
     }
 
     fun getItem(id: String): MediaItem? {

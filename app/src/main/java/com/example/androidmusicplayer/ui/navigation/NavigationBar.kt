@@ -40,11 +40,11 @@ fun NavigationBar(
                         Color.Black,
                         Color.DarkGray
                     ),
-                    startY = 90f
+                    startY = 80f
                 ),
-                alpha = 0.9f
+                alpha = 0.95f
             ),
-        contentColor = White,
+        contentColor = Color.White,
         backgroundColor = Color.Transparent,
         elevation = 0.dp,
     )
@@ -57,7 +57,7 @@ fun NavigationBar(
                 selected = currentScreen == screen,
                 modifier = Modifier.semantics {
                     contentDescription = screen.name + " button"
-                }
+                },
             )
         }
     }

@@ -13,7 +13,6 @@ import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionResult
 import com.example.androidmusicplayer.activity.MainActivity
-import com.example.androidmusicplayer.activity.PlayerActivity
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
@@ -136,12 +135,10 @@ class PlayerService : MediaLibraryService() {
                 .build()
         MediaItemTree.initialize()
 
-        val parentScreenIntent = Intent(this, MainActivity::class.java)
-        val intent = Intent(this, PlayerActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
 
         val pendingIntent =
             TaskStackBuilder.create(this).run {
-                addNextIntent(parentScreenIntent)
                 addNextIntent(intent)
 
                 val immutableFlag = FLAG_IMMUTABLE

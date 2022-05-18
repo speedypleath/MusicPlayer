@@ -109,6 +109,13 @@ dependencies {
 //    implementation project(':librespot-android-sink')
     implementation 'uk.uuid.slf4j:slf4j-android:1.7.36-0'
     implementation "androidx.activity:activity:1.4.0"
+    //Camera
+    implementation("androidx.camera:camera-camera2:1.1.0-rc01")
+    implementation("androidx.camera:camera-view:1.1.0-rc01")
+    implementation("androidx.camera:camera-lifecycle:1.0.2")
+
+    //Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.18.0")
 
     // Icons
     implementation("br.com.devsrsouza.compose.icons.android:font-awesome:1.0.0")
@@ -125,6 +132,7 @@ dependencies {
     implementation "androidx.media3:media3-ui:$media3_version"
     implementation "androidx.media3:media3-session:$media3_version"
     implementation "androidx.media3:media3-common:$media3_version"
+    implementation 'androidx.camera:camera-core:1.0.2'
 
     // Persistent storage room
     kapt "androidx.room:room-compiler:$room_version"

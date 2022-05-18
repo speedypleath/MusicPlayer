@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <application
         android:name=".AndroidMusicPlayer"
@@ -25,18 +28,6 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".activity.PlayerActivity">
-        </activity>
-
-        <activity
-            android:name=".activity.PlaylistActivity">
-        </activity>
-
-        <activity
-            android:name=".activity.LibraryActivity">
         </activity>
 
         <service

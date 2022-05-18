@@ -2,10 +2,11 @@ package com.example.androidmusicplayer.ui.viewmodel
 
 import android.content.ComponentName
 import android.content.Context
+import android.media.session.PlaybackState
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
@@ -16,7 +17,6 @@ import com.example.androidmusicplayer.media.PlayerService
 import com.example.androidmusicplayer.model.song.Song
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
-import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val repository: SongRepository
@@ -29,6 +29,9 @@ class PlayerViewModel(
     private val _song =  MutableLiveData<Song>()
     val song: LiveData<Song>
         get() = _song
+    private val _duration = MutableLiveData<Long>()
+    val duration: LiveData<Long>
+        get() = _duration
 
     fun init(context: Context) {
         controllerFuture =
@@ -42,7 +45,6 @@ class PlayerViewModel(
 
     private fun setController() {
         val controller = this.controller ?: return
-
         controller.addListener(
             object : Player.Listener {
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -55,6 +57,12 @@ class PlayerViewModel(
 
                 override fun onRepeatModeChanged(repeatMode: Int) {
                     updateRepeatSwitchUI(repeatMode)
+                }
+
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    super.onPlaybackStateChanged(playbackState)
+                    Log.d("Player", "length: ${controller.duration}")
+                    _duration.postValue(controller.duration)
                 }
             }
         )
@@ -69,7 +77,8 @@ class PlayerViewModel(
     }
 
     private fun updateMediaMetadataUI(mediaMetadata: MediaMetadata) {
-
+        val found = repository.getSong(mediaMetadata.title.toString()) ?: return
+        _song.postValue(found)
     }
 
     fun releaseController() {

@@ -24,8 +24,4 @@ data class RoomAlbum(
     val type = "room"
     @delegate:Ignore
     private val adapter: AlbumAdapter by inject()
-
-    fun fromRoom(): Album {
-        return adapter.fromRoom(this)
-    }
 }
