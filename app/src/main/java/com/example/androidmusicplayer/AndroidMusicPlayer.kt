@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.work.Configuration
 import coil.disk.DiskCache
 import coil.imageLoader
 import com.example.androidmusicplayer.activity.MainActivity
@@ -22,7 +23,10 @@ import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.data.truth.MediaStoreDataSource
 import com.example.androidmusicplayer.data.truth.SpotifyDataSource
 import com.example.androidmusicplayer.ui.state.TreePathState
-import com.example.androidmusicplayer.ui.viewmodel.*
+import com.example.androidmusicplayer.ui.viewmodel.LibraryViewModel
+import com.example.androidmusicplayer.ui.viewmodel.MainViewModel
+import com.example.androidmusicplayer.ui.viewmodel.PlayerViewModel
+import com.example.androidmusicplayer.ui.viewmodel.SettingsViewModel
 import com.example.androidmusicplayer.util.CLIENT_ID
 import com.example.androidmusicplayer.util.REDIRECT_URI
 import com.example.androidmusicplayer.util.Status
@@ -35,11 +39,16 @@ import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
-class AndroidMusicPlayer : Application() {
+class AndroidMusicPlayer : Application(), Configuration.Provider {
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setMinimumLoggingLevel(Log.INFO)
+            .build()
+
     private val appModule = module {
         single { provideRepository(get(), get(), androidApplication()) }
         single { provideSpotifyDataSource(get()) }
@@ -56,7 +65,6 @@ class AndroidMusicPlayer : Application() {
             }
         }
         factory { ImageApi(androidApplication()) }
-
         single {
             SettingsViewModel(get(), get())
         }
@@ -178,9 +186,11 @@ class AndroidMusicPlayer : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@AndroidMusicPlayer)
+            workManagerFactory()
             androidLogger()
             modules(appModule)
         }
+
         applicationContext.imageLoader
             .newBuilder()
             .memoryCache {

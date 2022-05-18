@@ -5,8 +5,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.data.api.SpotifyApi
+import com.example.androidmusicplayer.data.repository.SongRepository
 import com.example.androidmusicplayer.ui.App
 import com.example.androidmusicplayer.ui.state.TreePathState
 import com.example.androidmusicplayer.ui.viewmodel.MainViewModel
@@ -21,6 +23,7 @@ import org.koin.core.parameter.parametersOf
 class MainActivity : ComponentActivity() {
     lateinit var spotifyApi: SpotifyApi
     lateinit var mediaStoreApi: MediaStoreApi
+    lateinit var songRepository: SongRepository
     private val playerViewModel: PlayerViewModel by viewModel()
     private val mainViewModel: MainViewModel by viewModel()
     private val treePathState: TreePathState by inject()
@@ -32,8 +35,15 @@ class MainActivity : ComponentActivity() {
         Log.d("MainActivity", "Application Started!")
         spotifyApi = get { parametersOf(this) }
         mediaStoreApi = get { parametersOf(this) }
+        songRepository = get()
         playerViewModel.init(applicationContext)
-        mainViewModel.fetchSongs()
+        mainViewModel.fetchSongs(applicationContext)
+        activityResult.observe(this) {
+            lifecycleScope.launchWhenStarted {
+                songRepository.fetchSpotify()
+                songRepository.fetchMediaStore()
+            }
+        }
     }
 
     override fun onStart() {

@@ -3,6 +3,7 @@ package com.example.androidmusicplayer.adapter
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.util.Size
 import com.example.androidmusicplayer.AndroidMusicPlayer
 import com.example.androidmusicplayer.data.dao.SongDao
@@ -35,7 +36,7 @@ class SongAdapter(
             try {
                 context.contentResolver.loadThumbnail(Uri.parse("content://media/external/audio/albumart/" + mediaStoreSong.songId), Size(128, 128), null)
             } catch (e: Exception) {
-//                Log.d("Song Adapter", "Exception: ${e.stackTraceToString()}")
+                Log.d("Song Adapter", "Exception: ${e.stackTraceToString()}")
                 BitmapFactory.decodeStream(context.assets.open("placeholder-images-image_large.webp"))
             }
         } else {
@@ -82,7 +83,7 @@ class SongAdapter(
                         it2.artistId,
                         it1.albumId,
                         0,
-                        "content://media/external/audio/albumart/" + song.songId,
+                        song.imageUri,
                         it
                     )
                 }

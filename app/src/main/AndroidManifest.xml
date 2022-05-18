@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -12,6 +13,7 @@
         tools:ignore="SystemPermissionTypo" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:name=".AndroidMusicPlayer"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -35,6 +37,12 @@
         <activity
             android:name=".activity.CameraActivity" >
         </activity>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
 
         <provider
             android:name="androidx.core.content.FileProvider"

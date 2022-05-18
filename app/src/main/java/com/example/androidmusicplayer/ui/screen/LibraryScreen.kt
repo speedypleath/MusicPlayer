@@ -6,9 +6,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.androidmusicplayer.ui.viewmodel.LibraryViewModel
 import org.koin.androidx.compose.getViewModel
@@ -28,6 +25,7 @@ fun LibraryScreen(
                 Button(onClick = {
                     libraryViewModel.tree.pushPathStack(items[index])
                     if (items[index].mediaMetadata.isPlayable == true) {
+                        libraryViewModel.tree.updateChildrenList(items[index].mediaId)
                         navController.navigate("playlist/${items[index].mediaId}")
                     }
                 }) {

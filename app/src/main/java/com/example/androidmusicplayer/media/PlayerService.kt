@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.ListenableFuture
 class PlayerService : MediaLibraryService() {
     private lateinit var player: ExoPlayer
     private lateinit var mediaLibrarySession: MediaLibrarySession
+    val spotifyPlayer = SpotifyPlayer()
     private val librarySessionCallback = CustomMediaLibrarySessionCallback()
 
     companion object {

@@ -17,7 +17,7 @@ object MediaItemTree {
     private const val ALBUM_ID = "[albumID]"
     private const val GENRE_ID = "[genreID]"
     private const val ARTIST_ID = "[artistID]"
-    private const val RECENT_ID = "[recentID]"
+    const val RECENT_ID = "[recentID]"
     private const val ALBUM_PREFIX = "[album]"
     private const val GENRE_PREFIX = "[genre]"
     private const val ARTIST_PREFIX = "[artist]"
@@ -35,7 +35,7 @@ object MediaItemTree {
         }
     }
 
-    private fun buildMediaItem(
+    fun buildMediaItem(
         title: String,
         mediaId: String,
         isPlayable: Boolean,
@@ -126,16 +126,18 @@ object MediaItemTree {
         val id = song.songId
         val album = if(song.album != null) song.album!!.name else "Unknown album"
         val title = song.title
-        val artist = if(song.artist != null) song.artist!!.name else "Unknown album"
+        val artist = if(song.artist != null) song.artist!!.name else "Unknown artist"
         val genre = "test"
-        val sourceUri = if(song.songId.toDoubleOrNull() != null)
+        val sourceUri = if(song.songId.toDoubleOrNull() != null) {
             ContentUris.withAppendedId(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 song.songId.toLong()
             )
+
+        }
         else
             Uri.parse(song.uri)
-        val imageUri = Uri.parse("content://media/external/audio/albumart/" + song.songId)
+        val imageUri = if(song.songId.toDoubleOrNull() != null) Uri.parse("content://media/external/audio/albumart/" + song.songId) else Uri.parse(song.imageUri)
         // key of such items in tree
         val idInTree = ITEM_PREFIX + id
         val albumFolderIdInTree = ALBUM_PREFIX + album

@@ -28,6 +28,7 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
         composable("playlist/{mediaId}") { backStackEntry ->
             val mainViewModel = getViewModel<MainViewModel>()
             mainViewModel.tree.updateChildrenList(backStackEntry.arguments?.getString("mediaId").toString())
+            mainViewModel.updateView()
             MainScreen()
         }
 

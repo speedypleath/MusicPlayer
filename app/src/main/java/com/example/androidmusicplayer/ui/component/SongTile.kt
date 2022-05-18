@@ -1,5 +1,6 @@
 package com.example.androidmusicplayer.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,6 +25,7 @@ fun SongTile(
     song: Song,
     onClick: () -> Unit
 ) {
+    Log.d("SongTile", song.image.toString())
     val painter: Painter = if(song.image == null)
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
