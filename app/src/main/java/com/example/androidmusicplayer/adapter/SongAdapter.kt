@@ -3,14 +3,10 @@ package com.example.androidmusicplayer.adapter
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.util.Size
 import com.example.androidmusicplayer.AndroidMusicPlayer
-import com.example.androidmusicplayer.data.dao.AlbumDao
-import com.example.androidmusicplayer.data.dao.ArtistDao
 import com.example.androidmusicplayer.data.dao.SongDao
 import com.example.androidmusicplayer.model.SpotifyResponse
-import com.example.androidmusicplayer.model.album.Album
 import com.example.androidmusicplayer.model.artist.Artist
 import com.example.androidmusicplayer.model.interfaces.Adapter
 import com.example.androidmusicplayer.model.song.MediaStoreSong

@@ -24,15 +24,6 @@ class AlbumAdapter(
         return json.name
     }
 
-    fun fromRoom(roomAlbum: RoomAlbum): AlbumModel {
-        val image = roomAlbum.uriString.let { imageApi.getBitmapFromUrl(it) }
-        return AlbumModel(
-            roomAlbum.albumId,
-            roomAlbum.name,
-            image,
-            roomAlbum.uriString)
-    }
-
     fun fromSpotify(spotifyAlbum: SpotifyAlbum): AlbumModel {
         val image = spotifyAlbum.uriString.let { imageApi.getBitmapFromUrl(it) }
         return AlbumModel(

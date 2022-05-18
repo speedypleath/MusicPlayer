@@ -2,24 +2,16 @@ package com.example.androidmusicplayer.activity
 
 import android.os.Bundle
 import android.util.Log
-
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.MutableLiveData
 import com.example.androidmusicplayer.data.api.MediaStoreApi
 import com.example.androidmusicplayer.data.api.SpotifyApi
 import com.example.androidmusicplayer.ui.App
-import com.example.androidmusicplayer.ui.component.MainContent
 import com.example.androidmusicplayer.ui.state.TreePathState
-import com.example.androidmusicplayer.ui.viewmodel.LibraryViewModel
 import com.example.androidmusicplayer.ui.viewmodel.MainViewModel
 import com.example.androidmusicplayer.ui.viewmodel.PlayerViewModel
 import com.example.androidmusicplayer.util.Status
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,14 +36,10 @@ class MainActivity : ComponentActivity() {
         mainViewModel.fetchSongs()
     }
 
-    @OptIn(ExperimentalPermissionsApi::class)
     override fun onStart() {
         super.onStart()
         setContent {
-            // A surface container using the 'background' color from the theme
-            Surface(color = MaterialTheme.colors.background) {
-                MainContent(Modifier.fillMaxSize())
-            }
+            App()
         }
     }
 

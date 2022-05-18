@@ -6,7 +6,6 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import com.example.androidmusicplayer.model.song.MediaStoreSong
 import com.example.androidmusicplayer.model.song.Song
 import com.google.common.collect.ImmutableList
 
@@ -18,7 +17,7 @@ object MediaItemTree {
     private const val ALBUM_ID = "[albumID]"
     private const val GENRE_ID = "[genreID]"
     private const val ARTIST_ID = "[artistID]"
-    const val RECENT_ID = "[recentID]"
+    private const val RECENT_ID = "[recentID]"
     private const val ALBUM_PREFIX = "[album]"
     private const val GENRE_PREFIX = "[genre]"
     private const val ARTIST_PREFIX = "[artist]"

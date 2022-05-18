@@ -1,10 +1,7 @@
 package com.example.androidmusicplayer.data.dao
 
 import androidx.room.*
-import com.example.androidmusicplayer.model.playlist.PlaylistWithSongs
 import com.example.androidmusicplayer.model.song.RoomSong
-import com.example.androidmusicplayer.model.song.Song
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
@@ -32,7 +29,4 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE artist = :artist")
     suspend fun getByArtist(artist: String): List<RoomSong>
 
-    @Transaction
-    @Query("SELECT * FROM playlist")
-    suspend fun getPlaylistsWithSongs(): List<PlaylistWithSongs>
 }
