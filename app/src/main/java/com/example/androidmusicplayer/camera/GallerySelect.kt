@@ -41,10 +41,10 @@ fun GallerySelect(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         Permission(
             permission = Manifest.permission.ACCESS_MEDIA_LOCATION,
-            rationale = "You want to read from photo gallery, so I'm going to have to ask for permission.",
+            rationale = "Need Permissions.",
             permissionNotAvailableContent = {
                 Column(modifier) {
-                    Text("O noes! No Photo Gallery!")
+                    Text("Forbidden!")
                     Spacer(modifier = Modifier.height(8.dp))
                     Row {
                         Button(
